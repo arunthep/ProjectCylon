@@ -26,7 +26,7 @@ usecolor = True
 if platform.system() == 'Windows':
 	import colorama
 	colorama.init()
-else
+else:
 	pass
  
 def printc(text, color):
