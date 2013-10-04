@@ -9,8 +9,12 @@ usecolor = True
 # before changing to true, run "pip install colorama" in commandline
 # and uncomment the 2 lines below first
 #
-import colorama
-colorama.init()
+if platform.system() == 'Windows':
+	import colorama
+	colorama.init()
+else
+	pass
+
  
 codeCodes = {
 	'black':    '0;30',     'bright gray':  '0;37',
@@ -232,10 +236,13 @@ class Element ( object ):
 		if self.checkattribute is not None:
 			element = self.Get()
 			print self.checkattribute
-			for i in range(len(self.checkattribute)):
-				row = self.checkattribute[i].split("=")
-				if self.VerifyAttribute(row[0],row[1]) == False:
-					overallresult = False
+			#for i in range(len(self.checkattribute)):
+			for i in self.checkattribute:
+				for j in i.split('|'):
+					#row = self.checkattribute[j].split("=")
+					row = j.split("=")
+					if self.VerifyAttribute(row[0],row[1]) == False:
+						overallresult = False
 
 		return (overallresult)
 	

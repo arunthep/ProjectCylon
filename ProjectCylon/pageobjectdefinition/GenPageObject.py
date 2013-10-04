@@ -9,6 +9,11 @@ global extractmode
 
 import time as tm
 
+import platform
+if platform.system() == 'Windows':
+	SEPARATOR = "\\"
+else
+	EPARATOR = "//"
 systemdebug=0
 debug=0
 
@@ -119,7 +124,7 @@ for Element in ElementList:
 	text+="\t\t\t\t)\n"
 text+= "{ClassName} = {ClassName}Class()".format(ClassName=ClassName)
 #print text
-filename = outputdir+"\\"+ClassName+".py"
+filename = outputdir+SEPARATOR+ClassName+".py"
 print "Output filename = " + filename
 fo = open(filename, 'w')
 fo.write(text)
