@@ -23,6 +23,7 @@ usecolor = True
 # before changing to true, run "pip install colorama" in commandline
 # and uncomment the 2 lines below first
 #
+import platform
 if platform.system() == 'Windows':
 	import colorama
 	colorama.init()
