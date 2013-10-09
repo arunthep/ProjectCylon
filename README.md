@@ -32,21 +32,22 @@ NOTE: do not use verion 1.2.3 or above -- there is an issue with Thai language.
 11. Git clone ProjectCylon
 
 12. Install Thai Font for CMD 
--- extract ThaiLang4CMD.zip
--- install font Courmon.ttf to windows fonts folder
-- run ThaiLangInDOS.reg
-- restart machine
-- run cmd windows and set font to courier mono thai and set font size to 24
+	+ extract ThaiLang4CMD.zip
+	+ install font Courmon.ttf to windows fonts folder
+	+ run ThaiLangInDOS.reg
+	+ restart machine
+	+ run cmd windows and set font to courier mono thai and set font size to 24
 
 13. Make Python able to run Thai
-- edit C:\Python27\Lib\site.py
-   find the following 2 rows and comment them out
-- #if hasattr(sys, "setdefaultencoding"):
--     #del sys.setdefaultencoding
-- create sitecustomize.py file at C:\Python27\Lib\site-packages with the following content
-import sys
-reload(sys)
-sys.setdefaultencoding("utf-8")
+	+ edit C:\Python27\Lib\site.py
+	+ find the following 2 rows and comment them out:
+		#if hasattr(sys, "setdefaultencoding"):
+			#del sys.setdefaultencoding
+
+	+ create sitecustomize.py file at C:\Python27\Lib\site-packages with the following content
+		import sys
+		reload(sys)
+		sys.setdefaultencoding("utf-8")
 
 
 How to use
