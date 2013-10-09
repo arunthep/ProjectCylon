@@ -119,7 +119,7 @@ for Element in ElementList:
 	text+="\t\t\t\t)\n"
 text+= "{ClassName} = {ClassName}Class()".format(ClassName=ClassName)
 #print text
-filename = outputdir+"\\"+ClassName+".py"
+filename = outputdir+"//"+ClassName+".py"
 print "Output filename = " + filename
 fo = open(filename, 'w')
 fo.write(text)

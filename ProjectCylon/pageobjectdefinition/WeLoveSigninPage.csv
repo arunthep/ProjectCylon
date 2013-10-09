@@ -1,0 +1,11 @@
+##Page##,,,,,,,,,
+Name:,WeLoveSigninPage,,,,,,,,
+Title:,เข้าสู่ระบบ : Weloveshopping.com,,,,,,,,
+URL:,http://www.weloveshopping.com/member/signin/,,,,,,,,
+VerifyWithURL:,TRUE,,,,,,,,
+NeedLogin:,FALSE,,,,,,,,
+,,,,,,,,,
+##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute
+Element:,username,username,xpath,"//*[@id=""username""]",,text,,,"class=""jq_watermark field"""
+Element:,password,password,xpath,"//*[@id=""password""]",,password,,,"class=""jq_watermark field"""
+Element:,checkbox,rememberpasswd,xpath,"//*[@id=""form""]/form/input",,checkbox,,,"class=""checkbox float-left"""

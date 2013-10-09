@@ -9,8 +9,8 @@ usecolor = True
 # before changing to true, run "pip install colorama" in commandline
 # and uncomment the 2 lines below first
 #
-import colorama
-colorama.init()
+#import colorama
+#colorama.init()
  
 codeCodes = {
 	'black':    '0;30',     'bright gray':  '0;37',
