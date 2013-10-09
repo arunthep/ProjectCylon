@@ -22,7 +22,8 @@ Windows Platform
 
 7. pip install selenium
 
-8. pip install behave
+8. pip install behave==1.2.2
+NOTE: do not use verion 1.2.3 or above -- there is an issue with Thai language.
 
 9. pip install colorama
 
@@ -30,13 +31,30 @@ Windows Platform
 
 11. Git clone ProjectCylon
 
+12. Install Thai Font for CMD 
+-- extract ThaiLang4CMD.zip
+-- install font Courmon.ttf to windows fonts folder
+-- run ThaiLangInDOS.reg
+-- restart machine
+-- run cmd windows and set font to courier mono thai and set font size to 24
+
+13. Make Python able to run Thai
+-- edit C:\Python27\Lib\site.py
+   find the following 2 rows and comment them out
+#if hasattr(sys, "setdefaultencoding"):
+#    del sys.setdefaultencoding
+-- create sitecustomize.py file at C:\Python27\Lib\site-packages with the following content
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 
 How to use
 ==========
 
 - clear all .py files in \pageobject\ (except __init__)
 - edit csv files in \pageobjectdefinition\
-- run GenALlPageObject.bat
+- run GenAllPageObject.bat
 - run CheckElements.bat to check pageobject
 - edit features file in \features\ (format and example: http://pythonhosted.org/behave/tutorial.html#feature-files)
 - edit steps file in \features\steps\
