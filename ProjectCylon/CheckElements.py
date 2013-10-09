@@ -23,8 +23,17 @@ usecolor = True
 # before changing to true, run "pip install colorama" in commandline
 # and uncomment the 2 lines below first
 #
+<<<<<<< HEAD
 #import colorama
 #colorama.init()
+=======
+import platform
+if platform.system() == 'Windows':
+	import colorama
+	colorama.init()
+else:
+	pass
+>>>>>>> bdce394590c75ae6614428eb8a725d95f05018f8
  
 def printc(text, color):
 	"""Print in color."""
