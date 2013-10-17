@@ -9,10 +9,7 @@ usecolor = True
 # before changing to true, run "pip install colorama" in commandline
 # and uncomment the 2 lines below first
 #
-<<<<<<< HEAD
-#import colorama
-#colorama.init()
-=======
+
 import platform
 if platform.system() == 'Windows':
 	import colorama
@@ -20,8 +17,6 @@ if platform.system() == 'Windows':
 else:
 	pass
 
->>>>>>> bdce394590c75ae6614428eb8a725d95f05018f8
- 
 codeCodes = {
 	'black':    '0;30',     'bright gray':  '0;37',
 	'blue':     '0;34',     'white':        '1;37',
@@ -110,7 +105,7 @@ class Element ( object ):
 		
 		wait = ui.WebDriverWait(World.driver,3)
 		try:
-			print "checking"
+			#print "checking"
 			wait.until(lambda driver : check_exists() != False)
 		except:
 			pass

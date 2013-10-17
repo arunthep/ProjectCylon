@@ -6,4 +6,4 @@ VerifyWithURL:,FALSE,,,,,,,,
 NeedLogin:,FALSE,,,,,,,,
 ,,,,,,,,,
 ##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute
-Element:,login,login,xpath,"//*[@id=""wrapper_login""]/div[1]/div[3]/div[1]/div[2]/a",,text,,,"href=""http://www.weloveshopping.com/member/signin/"""
+Element:,login,login,xpath,"//*[@id=""wrapper_login""]/div[1]/div[3]/div[1]/div[2]/a",,,,,"href=""http://www.weloveshopping.com/member/signin/"""

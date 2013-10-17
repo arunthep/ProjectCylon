@@ -9,7 +9,6 @@ class WeLoveHomePageClass(Page):
 				parent=self,
 				locatingmethod="xpath",
 				locator='//*[@id="wrapper_login"]/div[1]/div[3]/div[1]/div[2]/a',
-				objecttype="text",
 				checkattribute=['href="http://www.weloveshopping.com/member/signin/"'],
 				)
 WeLoveHomePage = WeLoveHomePageClass()

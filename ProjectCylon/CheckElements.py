@@ -23,31 +23,27 @@ usecolor = True
 # before changing to true, run "pip install colorama" in commandline
 # and uncomment the 2 lines below first
 #
-<<<<<<< HEAD
-#import colorama
-#colorama.init()
-=======
+
 import platform
 if platform.system() == 'Windows':
 	import colorama
 	colorama.init()
 else:
 	pass
->>>>>>> bdce394590c75ae6614428eb8a725d95f05018f8
  
-def printc(text, color):
+def printc(text, color = None):
 	"""Print in color."""
-	if usecolor == True:
-		print "\033["+codeCodes[color]+"m"+text+"\033[0m",
+	if usecolor == True and color != None:
+		print "\033["+codeCodes[color]+"m"+text.decode('utf-8')+"\033[0m",
 	else:
-		print text,
+		print text.decode('utf-8'),
 	
-def writec(text, color):
+def writec(text, color = None):
 	"""Write to stdout in color."""
-	if usecolor == True:
-		sys.stdout.write("\033["+codeCodes[color]+"m"+text+"\033[0m")
+	if usecolor == True and color != None:
+		sys.stdout.write("\033["+codeCodes[color]+"m"+text.decode('utf-8')+"\033[0m")
 	else:
-		sys.stdout.write(text)
+		sys.stdout.write(text.decode('utf-8'))
 		
 def switchColor(color):
 	"""Switch console color."""
@@ -57,24 +53,24 @@ try:
 
 	for Page in World.PageList:
 		if Page.needlogin == False:
-			print "Testing : ",
-			printc( Page.title, 'bright cyan')
-			print ( " at url : " + Page.url)
+			printc( "Testing : " )
+			printc( Page.name, 'bright cyan' )
+			printc( " : " )
+			printc( Page.title, 'bright cyan' )
+			printc( " at url : " + Page.url )
 			Page.Go()
 			if Page.Verify():
-				print "Test Page : "+Page.title + " : "
-				printc( "[OK]", 'bright green')
-				print "\n"
+				printc( "Test Page : "+Page.title + " : \n" )
+				printc( "[OK]\n", 'bright green')
 			else:
-				print "Test Page : "+Page.title + " : "
-				printc( "[FAIL]", 'bright red')
-				print "\n"
+				printc( "Test Page : "+Page.title + " : \n" )
+				printc( "[FAIL]\n", 'bright red')
 			
 			for Element in World.ElementList:
 				if Element.parent == Page:
-					print "Testing : ",
+					printc( "Testing : " )
 					printc(  Element.name, 'bright blue')
-					print " at : " + Element.locator
+					printc( " at : " + Element.locator + "\n" )
 					if Element.parent.Verify() == False or Element.functionbeforecheckelement is not None:
 						Element.parent.Go()
 					try:
