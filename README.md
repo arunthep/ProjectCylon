@@ -39,6 +39,7 @@ NOTE: do not use verion 1.2.3 or above -- there is an issue with Thai language.
 	+ run cmd windows and set font to courier mono thai and set font size to 24
 
 13. Make Python able to run Thai
+
 	+ edit C:\Python27\Lib\site.py
 	+ find the following 2 rows and comment them out:
 		#if hasattr(sys, "setdefaultencoding"):
@@ -49,6 +50,9 @@ NOTE: do not use verion 1.2.3 or above -- there is an issue with Thai language.
 		reload(sys)
 		sys.setdefaultencoding("utf-8")
 
+14. Change Language for non-Unicode program to Thai (Region and Language -> Administrative -> Language for non-Unicode program)
+
+15. Restart machin
 
 How to use
 ==========
