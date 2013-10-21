@@ -28,10 +28,13 @@ NOTE: do not use verion 1.2.3 or above -- there is an issue with Thai language.
 9. pip install colorama
 
 10. extract ansicon and run ansicon -i (check 32 / 64 bits version)
+	+ You can download it here: https://github.com/adoxa/ansicon/downloads
+	+ Read the detailed instructions here: http://www.kevwebdev.com/blog/in-search-of-a-better-windows-console-using-ansicon-console2-and-git-bash.html
+		+ Focus at section "ANSI escape sequence support with ansicon"
 
 11. Git clone ProjectCylon
 
-12. Install Thai Font for CMD 
+12. Install Thai Font for CMD
 	+ extract ThaiLang4CMD.zip
 	+ install font Courmon.ttf to windows fonts folder
 	+ run ThaiLangInDOS.reg
@@ -52,7 +55,7 @@ NOTE: do not use verion 1.2.3 or above -- there is an issue with Thai language.
 
 14. Change Language for non-Unicode program to Thai (Region and Language -> Administrative -> Language for non-Unicode program)
 
-15. Restart machin
+15. Restart machine
 
 How to use
 ==========
