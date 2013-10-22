@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 from framework.WorldContext import *
 World = WorldContext.Instance()
 
@@ -28,25 +28,25 @@ codeCodes = {
 	'dark gray':'1;30',     'bright yellow':'1;33',
 	'normal':   '0'
 }
- 
+
 def printc(text, color):
 	"""Print in color."""
 	if usecolor == True:
 		print "\033["+codeCodes[color]+"m"+text+"\033[0m",
 	else:
 		print text,
-	
+
 def writec(text, color):
 	"""Write to stdout in color."""
 	if usecolor == True:
 		sys.stdout.write("\033["+codeCodes[color]+"m"+text+"\033[0m")
 	else:
 		sys.stdout.write(text)
-		
+
 def switchColor(color):
 	"""Switch console color."""
 	sys.stdout.write("\033["+codeCodes[color]+"m")
-			 
+
 class Element ( object ):
 	name = ""
 	locatingmethod = "name"
@@ -59,13 +59,13 @@ class Element ( object ):
 	defaultvalue = None
 	availablevalue = None
 	checkattribute = None
-	
-	def __init__( 	self, 
-					name="", 
-					parent=None, 
-					locatingmethod="name", 
-					locator="", 
-					functionbeforecheckelement=None, 
+
+	def __init__( 	self,
+					name="",
+					parent=None,
+					locatingmethod="name",
+					locator="",
+					functionbeforecheckelement=None,
 					objecttype = None ,
 					defaultstate = None,
 					defaultvalue = None,
@@ -83,7 +83,7 @@ class Element ( object ):
 		self.defaultvalue = defaultvalue
 		self.availablevalue = availablevalue
 		self.checkattribute = checkattribute
-	
+
 	def check_exists( self ):
 		if self.locatingmethod == "name":
 			try:
@@ -99,17 +99,17 @@ class Element ( object ):
 				return False
 			return True
 		Assert (False, "Invalid Locator Method")
-	
+
 	def Get( self ):
 		element = None
-		
+
 		wait = ui.WebDriverWait(World.driver,3)
 		try:
 			#print "checking"
 			wait.until(lambda driver : check_exists() != False)
 		except:
 			pass
-			
+
 		try:
 			if self.locatingmethod == "name":
 				element = World.driver.find_element_by_name(self.locator)
@@ -118,7 +118,7 @@ class Element ( object ):
 		except:
 			pass
 		return element
-	
+
 	def Click( self ):
 		if ( self.Verify() == False ):
 			return False
@@ -150,10 +150,10 @@ class Element ( object ):
 		else:
 			printc( "failed" + "\n", "bright red" )
 			return False
-#Verify Enable and Disable ---------------------------------------------------------------------------		
+#Verify Enable and Disable ---------------------------------------------------------------------------
 
 #Verify Check and Uncheck ----------------------------------------------------------------------------
-			
+
 	def VerifyIsChecked( self ):
 		if ( self.Verify() == False ):
 			return False
@@ -165,7 +165,7 @@ class Element ( object ):
 		else:
 			printc( "failed" + "\n", "bright red" )
 			return False
-	
+
 	def VerifyIsUncheck( self ):
 		if ( self.Verify() == False ):
 			return False
@@ -176,9 +176,9 @@ class Element ( object ):
 			return True
 		else:
 			printc( "failed" + "\n", "bright red" )
-			return False	
+			return False
 #Verify Check and Uncheck ----------------------------------------------------------------------------
-		
+
 	def Verify( self ):
 		if self.parent is not None:
 			if ( self.parent.Verify() == False ):
@@ -187,45 +187,45 @@ class Element ( object ):
 		if element is None:
 			return False
 		return True
-		
+
 	def VerifyUI( self ):
 		if self.parent is not None:
 			if ( self.parent.Verify() == False ):
 				return False
 		element = self.Get()
-		
+
 		if element is None:
 			return False
 		overallresult = True
-		
+
 		if self.objecttype is not None:
 			if self.VerifyAttribute('type',self.objecttype) == False:
 				overallresult = False
-				
+
 		if self.defaultstate is not None:
-			
+
 			if self.defaultstate == 'Enable':
 				if self.VerifyIsEnable() == False:
 					overallresult = False
 			elif self.defaultstate == 'Disable':
 				if self.VerifyDisable() == False:
 					overallresult = False
-			
+
 			elif self.defaultstate == 'True':
 				if self.VerifyIsCheck() == False:
 					overallresult = False
 			elif self.defaultstate == 'False':
 				if self.VerifyIsUncheck() == False:
 					overallresult = False
-			
+
 			else :
 				print "Invalid Default State : " + (self.defaultstate)
 				overallresult = False
-						
+
 		if self.defaultvalue is not None:
 			if self.VerifyValue(self.defaultvalue) == False:
 					overallresult = False
-					
+
 		if self.availablevalue is not None:
 			element = self.Get()
 			for i in range(len(self.availablevalue)):
@@ -233,7 +233,7 @@ class Element ( object ):
 				print options
 				# if self.VerifyAttribute(self.availablevalue[i]) == False:
 					# overallresult = False
-		
+
 		if self.checkattribute is not None:
 			element = self.Get()
 			print self.checkattribute
@@ -246,7 +246,7 @@ class Element ( object ):
 						overallresult = False
 
 		return (overallresult)
-	
+
 	def VerifyNotexist( self ):
 		if self.parent is not None:
 			if ( self.parent.Verify() != True ):
@@ -256,7 +256,7 @@ class Element ( object ):
 		if element is None:
 			return True
 		return False
-	
+
 	def SendKeys( self, textinput ):
 		if self.parent is not None:
 			if ( self.parent.Verify() == False ):
@@ -264,7 +264,7 @@ class Element ( object ):
 		element = self.Get()
 		element.send_keys( textinput )
 		return True
-		
+
 	def VerifyText(  self, expectedresult ):
 		if (self.Verify() != True):
 			return False
@@ -279,7 +279,7 @@ class Element ( object ):
 			else:
 				printc ( "failed\n", "bright red")
 				print "Got '",
-				printc ( str(result) + "'\n", "bright yellow" ) 
+				printc ( str(result) + "'\n", "bright yellow" )
 				return False
 		else :
 			print " Verify Text : '" + str(expectedresult) + "': ",
@@ -291,7 +291,7 @@ class Element ( object ):
 				print "Got '",
 				printc ( str(result) + "'\n", "bright yellow" )
 				return False
-	
+
 	def VerifyValue(  self, value ):
 		if (self.Verify() != True):
 			return
@@ -312,8 +312,8 @@ class Element ( object ):
 				return True
 			else:
 				print " Verify Value : " + str(value) + " failed got " + result + " instead"
-				return False	
-	
+				return False
+
 	def VerifyAttribute(  self, attributename, expectedresult ):
 		if (self.Verify() != True):
 			return False
@@ -321,7 +321,7 @@ class Element ( object ):
 		result = str(element.get_attribute(attributename).encode('utf-8','ignore'))
 		expectedresult = str(expectedresult.encode('utf-8','ignore'))
 		if expectedresult[0] == '"' and expectedresult[len(expectedresult)-1] == '"':
-			expectedresult = expectedresult[1:len(expectedresult)-2]
+			expectedresult = expectedresult[1:len(expectedresult)-1]
 		print " Verify ",
 		printc (str(attributename),'bright yellow')
 		print ":",
@@ -335,20 +335,20 @@ class Element ( object ):
 			printc (result, 'bright red')
 			print "instead"
 			return False
-		
-		
+
+
 class Page ( object ):
 	name = ""
 	title = ""
 	url = ""
 	needlogin = False
 	loginfunction = ""
-	
+
 	def __init__(	self,
 					name="",
 					title="",
 					url = "",
-					needlogin = False, 
+					needlogin = False,
 					loginfunction = "",):
 			self.name = name
 			self.title = title
@@ -356,13 +356,13 @@ class Page ( object ):
 			self.needlogin = needlogin
 			self.loginfunction = loginfunction
 			World.PageList.append(self)
-			
+
 	def Go ( self ):
 		#World.GoTo( self.url )
 		World.GoToPage( self )
 		time.sleep(2)
 		return self.Verify()
-		
+
 	def Verify( self ):
 		wait = ui.WebDriverWait(World.driver,10)
 		try:
