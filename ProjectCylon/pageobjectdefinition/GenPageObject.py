@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 import string
 import argparse
 import csv
@@ -13,7 +13,7 @@ import platform
 if platform.system() == 'Windows':
 	SEPARATOR = "\\"
 else:
-	EPARATOR = "/"
+	SEPARATOR = "/"
 systemdebug=0
 debug=0
 
@@ -22,7 +22,7 @@ parser.add_argument('--InputFile', dest='inputfile', action='store',
                    help='input csv filename')
 parser.add_argument('--OutputDir', dest='outputdir', action='store',
                    help='output directory')
-				   
+
 args = parser.parse_args()
 csvfile = None
 outputdir = "."
@@ -55,8 +55,8 @@ for row in inputfile:
 		NeedLogin = (row[1]=="TRUE") #Excel auto convert to capital
 	if row[0] == "LoginFunction:":
 		LoginFunction = row[1]
-	
-	
+
+
 	if row[0] == "##Elements##":
 		for column in columnlist:
 			columnlist[column] = -1
@@ -72,10 +72,10 @@ for row in inputfile:
 				item[column] = row[columnlist[column]]
 			else:
 				item[column] = ""
-		
+
 		ElementList.append(item)
-		
-		
+
+
 if ClassName == "":
 	print "ERROR Name not found"
 	assert False
@@ -87,7 +87,7 @@ text+="# -*- coding: utf-8 -*- \n"
 text+="from framework.PageRefObFramework import *\n"
 text+="class {ClassName}Class(Page):\n".format(ClassName=ClassName)
 for Element in ElementList:
-	text+="\t"+Element["ObjectName"]+ " = None\n" 
+	text+="\t"+Element["ObjectName"]+ " = None\n"
 text+="\tdef __init__(self):\n"
 text+='\t\tsuper( {ClassName}Class, self ).__init__( name="{ClassName}", title="{PageTitle}", url="{PageURL}", needlogin={NeedLogin}, loginfunction="{LoginFunction}"  )\n'.format(ClassName=ClassName, PageTitle=PageTitle, PageURL=PageURL, NeedLogin=NeedLogin, LoginFunction=LoginFunction )
 for Element in ElementList:
