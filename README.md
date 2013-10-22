@@ -23,7 +23,7 @@ Windows Platform
 7. pip install selenium
 
 8. pip install behave==1.2.2
-NOTE: do not use verion 1.2.3 or above -- there is an issue with Thai language.
+NOTE: do not use version 1.2.3 or above -- there is an issue with Thai language.
 
 9. pip install colorama
 
