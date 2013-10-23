@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 from framework.WorldContext import *
 World = WorldContext.Instance()
 
 from User import *
 
 DefaultUser = User()
-ManagerDemoUser = User( "managerdemo", "managerdemo!" )
-AgentDemoUser 	= User( "agentdemo1", "agentdemo1!" )
+ManagerDemoUser = User("managerdemo", "managerdemo!")
+AgentDemoUser = User("agentdemo1", "agentdemo1!")
 
 World.MasterList["User"] = {}
 World.MasterList["User"]["DefaultUser"] = DefaultUser
