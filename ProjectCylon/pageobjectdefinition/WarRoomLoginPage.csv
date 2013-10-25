@@ -2,7 +2,7 @@
 Name:,WarRoomLoginPage,,,,,,,,
 Title:,Warroom,,,,,,,,
 URL:,http://tools.thothmedia.com/warroom_new/,,,,,,,,
-VerifyWithURL:,TRUE,,,,,,,,
+PageVerifyMethod:,Title,,,,,,,,
 NeedLogin:,FALSE,,,,,,,,
 ,,,,,,,,,
 ##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute

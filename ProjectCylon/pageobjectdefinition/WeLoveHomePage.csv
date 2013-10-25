@@ -2,7 +2,7 @@
 Name:,WeLoveHomePage,,,,,,,,
 Title:,ร้านค้าออนไลน์ ขายของออนไลน์ เว็บขายของ ช้อปปิ้ง | Weloveshopping,,,,,,,,
 URL:,http://www.weloveshopping.com/,,,,,,,,
-VerifyWithURL:,FALSE,,,,,,,,
+PageVerifyMethod:,URL,,,,,,,,
 NeedLogin:,FALSE,,,,,,,,
 ,,,,,,,,,
 ##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute

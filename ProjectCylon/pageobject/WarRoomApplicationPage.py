@@ -8,7 +8,7 @@ class WarRoomApplicationPageClass(Page):
 	monitor = None
 	pending = None
 	def __init__(self):
-		super( WarRoomApplicationPageClass, self ).__init__( name="WarRoomApplicationPage", title="Warroom", url="http://tools.thothmedia.com/warroom_new/", needlogin=True, loginfunction="WarRoomLogin"  )
+		super( WarRoomApplicationPageClass, self ).__init__( name="WarRoomApplicationPage", title="Warroom", url="http://tools.thothmedia.com/warroom_new/", needlogin=True, loginfunction="WarRoomLogin", pageverifymethod="Title"  )
 		self.menu = Element (
 				name="menu",
 				parent=self,

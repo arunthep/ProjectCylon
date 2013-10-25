@@ -5,7 +5,7 @@ class WarRoomLoginPageClass(Page):
 	password = None
 	login = None
 	def __init__(self):
-		super( WarRoomLoginPageClass, self ).__init__( name="WarRoomLoginPage", title="Warroom", url="http://tools.thothmedia.com/warroom_new/", needlogin=False, loginfunction=""  )
+		super( WarRoomLoginPageClass, self ).__init__( name="WarRoomLoginPage", title="Warroom", url="http://tools.thothmedia.com/warroom_new/", needlogin=False, loginfunction="", pageverifymethod="Title"  )
 		self.username = Element (
 				name="username",
 				parent=self,

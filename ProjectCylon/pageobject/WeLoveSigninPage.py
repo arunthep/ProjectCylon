@@ -5,7 +5,7 @@ class WeLoveSigninPageClass(Page):
 	password = None
 	checkbox = None
 	def __init__(self):
-		super( WeLoveSigninPageClass, self ).__init__( name="WeLoveSigninPage", title="เข้าสู่ระบบ : Weloveshopping.com", url="http://www.weloveshopping.com/member/signin/", needlogin=False, loginfunction=""  )
+		super( WeLoveSigninPageClass, self ).__init__( name="WeLoveSigninPage", title="เข้าสู่ระบบ : Weloveshopping.com", url="http://www.weloveshopping.com/member/signin/", needlogin=False, loginfunction="", pageverifymethod="URL"  )
 		self.username = Element (
 				name="username",
 				parent=self,

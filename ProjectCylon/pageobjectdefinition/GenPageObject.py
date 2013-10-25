@@ -39,6 +39,7 @@ PageURL = ""
 NeedLogin = False
 LoginFunction = ""
 ElementList = []
+PageVerifyMethod = "Title"
 
 inputfile = csv.reader( csvfile, delimiter=',', quotechar='"' )
 
@@ -55,6 +56,8 @@ for row in inputfile:
 		NeedLogin = (row[1]=="TRUE") #Excel auto convert to capital
 	if row[0] == "LoginFunction:":
 		LoginFunction = row[1]
+	if row[0] == "PageVerifyMethod:":
+		PageVerifyMethod = row[1]
 
 
 	if row[0] == "##Elements##":
@@ -89,7 +92,7 @@ text+="class {ClassName}Class(Page):\n".format(ClassName=ClassName)
 for Element in ElementList:
 	text+="\t"+Element["ObjectName"]+ " = None\n"
 text+="\tdef __init__(self):\n"
-text+='\t\tsuper( {ClassName}Class, self ).__init__( name="{ClassName}", title="{PageTitle}", url="{PageURL}", needlogin={NeedLogin}, loginfunction="{LoginFunction}"  )\n'.format(ClassName=ClassName, PageTitle=PageTitle, PageURL=PageURL, NeedLogin=NeedLogin, LoginFunction=LoginFunction )
+text+='\t\tsuper( {ClassName}Class, self ).__init__( name="{ClassName}", title="{PageTitle}", url="{PageURL}", needlogin={NeedLogin}, loginfunction="{LoginFunction}", pageverifymethod="{PageVerifyMethod}"  )\n'.format(ClassName=ClassName, PageTitle=PageTitle, PageURL=PageURL, NeedLogin=NeedLogin, LoginFunction=LoginFunction, PageVerifyMethod=PageVerifyMethod )
 for Element in ElementList:
 	text+="\t\tself." + Element["ObjectName"] + " = Element (\n"
 	text+="\t\t\t\tname=\"" + Element["Name"] +"\",\n"

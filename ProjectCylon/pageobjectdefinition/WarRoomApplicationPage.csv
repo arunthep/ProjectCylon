@@ -2,7 +2,7 @@
 Name:,WarRoomApplicationPage,,,,,,,,
 Title:,Warroom,,,,,,,,
 URL:,http://tools.thothmedia.com/warroom_new/,,,,,,,,
-VerifyWithURL:,TRUE,,,,,,,,
+PageVerifyMethod:,Title,,,,,,,,
 NeedLogin:,TRUE,,,,,,,,
 LoginFunction:,WarRoomLogin,,,,,,,,
 ,,,,,,,,,

@@ -2,7 +2,7 @@
 Name:,WeLoveSigninPage,,,,,,,,
 Title:,เข้าสู่ระบบ : Weloveshopping.com,,,,,,,,
 URL:,http://www.weloveshopping.com/member/signin/,,,,,,,,
-VerifyWithURL:,TRUE,,,,,,,,
+PageVerifyMethod:,URL,,,,,,,,
 NeedLogin:,FALSE,,,,,,,,
 ,,,,,,,,,
 ##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute

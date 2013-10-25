@@ -3,6 +3,7 @@ from framework.WorldContext import *
 World = WorldContext.Instance()
 
 import unittest
+from urlparse import urlparse
 
 #== Use Color ==#
 usecolor = True
@@ -343,18 +344,21 @@ class Page( object ):
     url = ""
     needlogin = False
     loginfunction = ""
+    pageverifymethod = "Title"
 
     def __init__( self,
                   name="",
                   title="",
                   url = "",
                   needlogin = False,
-                  loginfunction = "",):
+                  loginfunction = "",
+                  pageverifymethod = "Title",):
             self.name = name
             self.title = title
             self.url = url
             self.needlogin = needlogin
             self.loginfunction = loginfunction
+            self.pageverifymethod = pageverifymethod
             World.PageList.append(self)
 
     def Go( self ):
@@ -364,17 +368,41 @@ class Page( object ):
         return self.Verify()
 
     def Verify( self ):
+        if self.pageverifymethod == "Title" or self.pageverifymethod == "Any":
+            if self.VerifyPageWithTitle() == True:
+                return True
+        if self.pageverifymethod == "URL" or self.pageverifymethod == "Any":
+            if self.VerifyPageWithURL() == True:
+                return True
+        return False
+			
+    def VerifyPageWithTitle( self, title=None ):
+        if title is None:
+            title = self.title
         wait = ui.WebDriverWait(World.driver,10)
         try:
-            wait.until(lambda driver : World.driver.title.lower().find(self.title.lower()) !=-1)
+            wait.until(lambda driver : World.driver.title.lower().find(title.lower()) !=-1)
         except:
             pass
-        currpagetitle = str(World.driver.title)
-        if( currpagetitle.lower().find(self.title.lower()) !=-1 ):
+        if( World.driver.title.lower().find(title.lower()) !=-1 ):
             return True
         else:
             print "Incorrect Page"
             return False
-        assert( currpagetitle.lower().find(self.title.lower()) !=-1 )
-        return True
-
+    
+    def VerifyPageWithURL( self , url=None ):
+        if url is None:
+            url = self.url
+        url1 = urlparse(url)
+        targeturl = url1.netloc + url1.path
+        
+        wait = ui.WebDriverWait(World.driver,10)
+        try:
+            wait.until(lambda driver : World.driver.current_url.lower().find(targeturl.lower()) !=-1)
+        except:
+            pass
+        if( World.driver.current_url.lower().find(targeturl.lower()) !=-1 ):
+            return True
+        else:
+            print "Incorrect Page"
+            return False
