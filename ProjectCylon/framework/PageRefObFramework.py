@@ -242,7 +242,7 @@ class Element( object ):
             for i in self.checkattribute:
                 for j in i.split('|'):
                     #row = self.checkattribute[j].split("=")
-                    row = j.split("=")
+                    row = j.strip().split("=")
                     if self.VerifyAttribute(row[0],row[1]) == False:
                         overallresult = False
 
@@ -375,7 +375,7 @@ class Page( object ):
             if self.VerifyPageWithURL() == True:
                 return True
         return False
-			
+
     def VerifyPageWithTitle( self, title=None ):
         if title is None:
             title = self.title
@@ -389,13 +389,13 @@ class Page( object ):
         else:
             print "Incorrect Page"
             return False
-    
+
     def VerifyPageWithURL( self , url=None ):
         if url is None:
             url = self.url
         url1 = urlparse(url)
         targeturl = url1.netloc + url1.path
-        
+
         wait = ui.WebDriverWait(World.driver,10)
         try:
             wait.until(lambda driver : World.driver.current_url.lower().find(targeturl.lower()) !=-1)
