@@ -16,6 +16,7 @@ echo " 1:: RUN ONLY"
 echo " 2:: GENERATE ONLY"
 echo " 3:: CHECKELEMENT ONLY"
 echo " 4:: GENERATE -> RUN"
+echo " 5:: GENERATE -> CHECK"
 echo ""
 echo " h:: SHOW MENU"
 echo "-------------------------------------------"
@@ -54,6 +55,8 @@ case "$OPTION" in
     3) Check
     ;;
     4) Generate; Run
+    ;;
+    5) Generate; Check
     ;;
     [hH] | help | HELP ) Menu
     ;;

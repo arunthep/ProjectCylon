@@ -64,8 +64,8 @@ How to install on Unix / Mac
 2. sudo pip install behave
 3. git clone https://github.com/pongrapee/ProjectCylon
 
-How to use
-==========
+How to use on window
+====================
 
 - clear all .py files in \pageobject\ (except __init__)
 - edit csv files in \pageobjectdefinition\
@@ -74,3 +74,13 @@ How to use
 - edit features file in \features\ (format and example: http://pythonhosted.org/behave/tutorial.html#feature-files)
 - edit steps file in \features\steps\
 - run RunBDDColor.bat to check test
+
+How to use on Unix / Mac
+========================
+
+- clear all .py files in \pageobject\ (except __init__)
+- edit csv files in \pageobjectdefinition\
+- run $./Run.sh 5
+- edit features file in \features\ (format and example: http://pythonhosted.org/behave/tutorial.html#feature-files)
+- edit steps file in \features\steps\
+- run $./Run.sh
