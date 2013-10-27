@@ -57,6 +57,13 @@ NOTE: do not use version 1.2.3 or above -- there is an issue with Thai language.
 
 15. Restart machine
 
+How to install on Unix / Mac
+==============================
+
+1. sudo easy_install pip
+2. sudo pip install behave
+3. git clone https://github.com/pongrapee/ProjectCylon
+
 How to use
 ==========
 
