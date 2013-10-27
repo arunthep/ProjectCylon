@@ -80,7 +80,7 @@ How to use on Unix / Mac
 
 - clear all .py files in \pageobject\ (except __init__)
 - edit csv files in \pageobjectdefinition\
-- run $./Run.sh 5
+- ./Run.sh 5 (for generate and check elelement object)
 - edit features file in \features\ (format and example: http://pythonhosted.org/behave/tutorial.html#feature-files)
 - edit steps file in \features\steps\
-- run $./Run.sh
+- ./Run.sh (for generate->checkelement->run)
