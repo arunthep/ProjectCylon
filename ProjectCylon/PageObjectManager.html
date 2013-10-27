@@ -219,9 +219,13 @@
 	    	}
 	    }
 
-	    function loadDataToFields(){
+	    function removeAllElementRows(){
 	    	var allRows = $('#element-table tbody tr');
 	    	allRows.remove();
+	    }
+
+	    function loadDataToFields(){
+	    	removeAllElementRows();
 			$('#page-name').val(sessionStorage['Name']);
 			$('#page-title').val(sessionStorage['Title']);
 			$('#page-url').val(sessionStorage['URL']);
@@ -299,6 +303,7 @@
 			$('#need-login').prop('checked', false);
 	    	sessionStorage['inputFileName'] = '';
 	    	sessionStorage['elementCount'] = 0;
+	    	removeAllElementRows();
 	    }
 
 		// ]]>
@@ -307,7 +312,7 @@
 <body>
 	<header>
 		<h1>Page Object Definition</h1>
-		<label class="version">rev. 1</label><br />
+		<label class="version">rev. 2</label><br />
 	</header>
 	<section class="page-list-section">
 		<div id="error-placeholder"></div>
@@ -347,6 +352,7 @@
 			<header>
 				<h4>Element Definition</h4>
 			</header>
+			<span id="lbl-element-delete-note">(The table content can be edited directly)</span>
 			<table id="element-table" border="1">
 				<thead>
 					<tr>
