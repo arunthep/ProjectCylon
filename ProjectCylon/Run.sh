@@ -4,6 +4,7 @@
 # Author: Lek
 # Created Date: 2013-10-09
 # Updated Date: 2013-10-25: Refactor, add option 3,4, help
+#               2013-10-28: Add ClearPY() function
 
 
 # Print out Menu Function
@@ -22,8 +23,14 @@ echo " h:: SHOW MENU"
 echo "-------------------------------------------"
 }
 
+# Clear All .py file at pageobject dir except __init__.py*
+ClearPY(){
+    ls pageobject/* | grep -v "__init__.py*" | xargs rm -f    
+}
+
 # Generate Object Function
 Generate(){
+    ClearPY
     cd pageobjectdefinition
     ./GenAllPageObject.sh
     cd ../
