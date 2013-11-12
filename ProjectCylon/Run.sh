@@ -12,12 +12,13 @@ Menu(){
 echo "----------------[`basename ${0}`]-------------------"
 echo " USAGE $./Run.sh <option>          "
 echo " <option> = "
-echo " DEFAULT | VOID | ANY :: GENERATE -> CHECK -> RUN"
+echo " DEFAULT | VOID | ANY :: GENERATE -> RUN"
 echo " 1:: RUN ONLY"
-echo " 2:: GENERATE ONLY"
-echo " 3:: CHECKELEMENT ONLY"
-echo " 4:: GENERATE -> RUN"
-echo " 5:: GENERATE -> CHECK"
+echo " 2:: CHECKELEMENT ONLY"
+echo " 3:: GENERATE ONLY"
+echo " 10:: GENERATE -> RUN"
+echo " 20:: GENERATE -> CHECK"
+echo " 100:: GENERATE -> CHECK -> RUN"
 echo ""
 echo " h:: SHOW MENU"
 echo "-------------------------------------------"
@@ -57,17 +58,19 @@ case "$OPTION" in
 
     1) Run
     ;;
-    2) Generate
+    2) Check
     ;;
-    3) Check
+    3) Generate
     ;;
-    4) Generate; Run
+    10) Generate; Run
     ;;
-    5) Generate; Check
+    20) Generate; Check
+    ;;
+    100) Generate; Check; Run
     ;;
     [hH] | help | HELP ) Menu
     ;;
-    *) Generate; Check; Run
+    *) Generate; Run
     ;;
 esac
 
