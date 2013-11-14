@@ -37,6 +37,10 @@
 			}
 			, false);
 
+			jQuery('#need-login').click(function(){
+				updatePageFromNeedLoginChange();
+			});
+
 			resetPage();
 		});
 
@@ -52,6 +56,19 @@
 	    var CheckAttributeIndex = 9;
 		var elementCount = 0;
 
+		function updatePageFromNeedLoginChange(){
+			if($('#need-login').prop('checked')){
+				$('#need-login+br').after('<div class="left-label"><label title="" for="login-function" class="title-text">Login Function:</label></div><input type="text" id="login-function" class="text-input">');
+				//sessionStorage['LoginFunction'] = 'test';
+				if(sessionStorage['LoginFunction'] != ''){
+					$('#login-function').val(sessionStorage['LoginFunction']);
+				}
+			}else{
+				$('#need-login+br+div.left-label').remove();
+				$('#login-function').remove();
+			}
+		}
+
 		function buildSaveTargetFileContent(){
 			var output = '';
 			output += "##Page##,,,,,,,,,\n";
@@ -60,6 +77,9 @@
 			output += "URL:," + sessionStorage['URL'] +",,,,,,,,\n";
 			output += "PageVerifyMethod:," + sessionStorage['PageVerifyMethod'] +",,,,,,,,\n";
 			output += "NeedLogin:," + sessionStorage['NeedLogin'] +",,,,,,,,\n";
+			if(sessionStorage['NeedLogin'] == 'TRUE'){
+				output += "LoginFunction:," + sessionStorage['LoginFunction'] + ",,,,,,,,";
+			}
 			output += ",,,,,,,,,\n";
 			output += "##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute\n";
 			var eleCount = parseInt(sessionStorage['elementCount']);
@@ -86,6 +106,7 @@
 			sessionStorage['PageVerifyMethod']=$('#page-verify-method').val();
 			flag = $('#need-login').prop('checked') ? 'TRUE':'FALSE';
 			sessionStorage['NeedLogin']=flag;
+			sessionStorage['LoginFunction']=$('#login-function').val();
 
 			var eleCount = parseInt(sessionStorage['elementCount']);
 			if(eleCount){
@@ -152,6 +173,12 @@
 				          			var cols = line.split(',');
 				          			//var pageNeedLogin = cols[1];
 				          			sessionStorage['NeedLogin']=cols[1];
+				          		}
+
+				          		if(line.indexOf('LoginFunction:,') > -1){
+				          			var cols = line.split(',');
+				          			//var pageNeedLogin = cols[1];
+				          			sessionStorage['LoginFunction']=cols[1];
 				          		}
 
 				          		if(line.indexOf('Element:,') > -1){
@@ -231,6 +258,7 @@
 			$('#page-url').val(sessionStorage['URL']);
 			$('#page-verify-method').val(sessionStorage['PageVerifyMethod']);
 			$('#need-login').prop('checked', sessionStorage['NeedLogin'] == 'TRUE' ? true:false);
+			updatePageFromNeedLoginChange();
 			var eleCount = parseInt(sessionStorage['elementCount']);
 			for (var ll = 0; ll < eleCount ; ll++) {
     			var lastRow=$('#element-table tbody tr:last');
@@ -312,7 +340,7 @@
 <body>
 	<header>
 		<h1>Page Object Definition</h1>
-		<label class="version">rev. 2</label><br />
+		<label class="version">rev. 3</label><br />
 	</header>
 	<section class="page-list-section">
 		<div id="error-placeholder"></div>
@@ -347,6 +375,7 @@
 			<label title="" for="need-login" class="title-text">Need Login:</label>
 		</div>
 		<input type="checkbox" id="need-login"></input><br />
+
 
 		<section class="element-section">
 			<header>
