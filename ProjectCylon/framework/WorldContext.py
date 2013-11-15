@@ -56,6 +56,7 @@ class WorldContext:
     ElementList = []
     PageList = []
     cdmlogin = False
+    dsflogin = False    
     CurrentPage = None
     _instance = None
     def __init__(self):
@@ -103,7 +104,13 @@ class WorldContext:
             self.FindElement("password").SendKeys("managerdemo!")
             self.FindElement("login").Click()
             self.cdmlogin = True
-        else:
+        elif loginfunctionname == "DsfLogin" and not self.dsflogin:
+            self.FindPage("DsfLoginPage").Go()
+            self.FindElement("username").SendKeys("fruit@gmail.com")
+            self.FindElement("password").SendKeys("12345678")
+            self.FindElement("login").Click()
+            self.dsflogin = True
+	else:
             print "Login Function {name} not found".format(name=loginfunctionname)
             pass
     def Find(self, ItemID, ItemListID):
