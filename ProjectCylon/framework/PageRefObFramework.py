@@ -259,6 +259,7 @@ class Element( object ):
         return False
 
     def SendKeys( self, textinput ):
+        textinput = World.ConvertValue(textinput)
         if self.parent is not None:
             if( self.parent.Verify() == False ):
                 return False
@@ -271,7 +272,7 @@ class Element( object ):
             return False
         element = self.Get()
         result = str(element.text.encode('utf-8','ignore'))
-        expectedresult = str(expectedresult.encode('utf-8','ignore'))
+        expectedresult = str(World.ConvertValue(expectedresult).encode('utf-8','ignore'))
         if expectedresult == "":
             print " Verify Text : '<blank>' : ",
             if result == "":
@@ -297,8 +298,8 @@ class Element( object ):
         if(self.Verify() != True):
             return
         element = self.Get()
-        result = str(element.text.encode('utf-8','ignore'))
-        value = str(value.encode('utf-8','ignore'))
+        result = str(element.text.encode('utf-8','ignore'))        
+        value = str(World.ConvertValue(value).encode('utf-8','ignore'))
         #print str(element.text)
         if value == "":
             if result == "":
