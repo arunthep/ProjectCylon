@@ -57,15 +57,14 @@
 		var elementCount = 0;
 
 		function updatePageFromNeedLoginChange(){
+			$('#need-login+br+div.left-label').remove();
+			$('#login-function').remove();
 			if($('#need-login').prop('checked')){
 				$('#need-login+br').after('<div class="left-label"><label title="" for="login-function" class="title-text">Login Function:</label></div><input type="text" id="login-function" class="text-input">');
 				//sessionStorage['LoginFunction'] = 'test';
 				if(sessionStorage['LoginFunction'] != ''){
 					$('#login-function').val(sessionStorage['LoginFunction']);
 				}
-			}else{
-				$('#need-login+br+div.left-label').remove();
-				$('#login-function').remove();
 			}
 		}
 
