@@ -115,12 +115,12 @@
 					sessionStorage[prefix+'_ObjectName']=$(this).find('td:eq('+ ObjectNameIndex + ')').html().replace('&nbsp;', '');
 					sessionStorage[prefix+'_Name']=$(this).find('td:eq('+ NameIndex + ')').html().replace('&nbsp;', '');
 					sessionStorage[prefix+'_LocatingMethod']=$(this).find('td:eq('+ LocatingMethodIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_Locator']=$(this).find('td:eq('+ LocatorIndex + ')').html().replace('&nbsp;', '');
+					sessionStorage[prefix+'_Locator']=addDoubleQuoteChar($(this).find('td:eq('+ LocatorIndex + ')').html().replace('&nbsp;', ''));
 					sessionStorage[prefix+'_PreCheck']=$(this).find('td:eq('+ PreCheckIndex + ')').html().replace('&nbsp;', '');
 					sessionStorage[prefix+'_ObjectType']=$(this).find('td:eq('+ ObjectTypeIndex + ')').html().replace('&nbsp;', '');
 					sessionStorage[prefix+'_DefaultState']=$(this).find('td:eq('+ DefaultStateIndex + ')').html().replace('&nbsp;', '');
 					sessionStorage[prefix+'_DefaultValue']=$(this).find('td:eq('+ DefaultValueIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_CheckAttribute']=$(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace('&nbsp;', '');
+					sessionStorage[prefix+'_CheckAttribute']=addDoubleQuoteChar($(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace('&nbsp;', ''));
 					indexRun++;
 				});
 			}
@@ -186,12 +186,12 @@
 				          			sessionStorage[prefix+'_ObjectName']=cols[ObjectNameIndex];
 				          			sessionStorage[prefix+'_Name']=cols[NameIndex];
 				          			sessionStorage[prefix+'_LocatingMethod']=cols[LocatingMethodIndex];
-				          			sessionStorage[prefix+'_Locator']=cols[LocatorIndex];
+				          			sessionStorage[prefix+'_Locator']=stripDoubleQuoteChar(cols[LocatorIndex]);
 				          			sessionStorage[prefix+'_PreCheck']=cols[PreCheckIndex];
 				          			sessionStorage[prefix+'_ObjectType']=cols[ObjectTypeIndex];
 				          			sessionStorage[prefix+'_DefaultState']=cols[DefaultStateIndex];
 				          			sessionStorage[prefix+'_DefaultValue']=cols[DefaultValueIndex];
-				          			sessionStorage[prefix+'_CheckAttribute']=cols[CheckAttributeIndex];
+				          			sessionStorage[prefix+'_CheckAttribute']=stripDoubleQuoteChar(cols[CheckAttributeIndex]);
 				          			elementCount++;
 				          		}
 				          }
@@ -215,7 +215,7 @@
 	    		var index = parseInt(answer);
 	    		var eleCount = parseInt(sessionStorage['elementCount']);
 	    		if(index <= eleCount){
-    				var targetRow = $('#element-table tbody tr:eq('+ (index - 1) + ')');
+    				var targetRow = $('#element-table tbody tr:eq(' + (index - 1) + ')');
     				if(targetRow.length == 1){
     					targetRow.remove();
     					sessionStorage['elementCount']=--eleCount;
@@ -331,6 +331,22 @@
 	    	sessionStorage['inputFileName'] = '';
 	    	sessionStorage['elementCount'] = 0;
 	    	removeAllElementRows();
+	    }
+
+	    function stripDoubleQuoteChar(inputStr){
+	    	if(inputStr.length >= 2 && inputStr[0] == '"' && inputStr[inputStr.length - 1] == '"'){
+	    		inputStr=inputStr.substring(1, inputStr.length - 1);
+	    	}
+			inputStr = inputStr.replace(/""/g, '"');
+			return inputStr;
+	    }
+
+	    function addDoubleQuoteChar(inputStr){
+	    	if(inputStr.indexOf('"') > 0){
+    			inputStr = inputStr.replace(/"/g, '""');
+	    	}
+	    	inputStr = '"' + inputStr + '"';
+	    	return inputStr;
 	    }
 
 		// ]]>
