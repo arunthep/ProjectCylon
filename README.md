@@ -49,9 +49,9 @@ NOTE: do not use version 1.2.3 or above -- there is an issue with Thai language.
 			#del sys.setdefaultencoding
 
 	+ create sitecustomize.py file at C:\Python27\Lib\site-packages with the following content
-		import sys
-		reload(sys)
-		sys.setdefaultencoding("utf-8")
+		+ import sys
+		+ reload(sys)
+		+ sys.setdefaultencoding("utf-8")
 
 14. Change Language for non-Unicode program to Thai (Region and Language -> Administrative -> Language for non-Unicode program)
 
@@ -62,7 +62,8 @@ How to install on Unix / Mac
 
 1. sudo easy_install pip
 2. sudo pip install behave
-3. git clone https://github.com/pongrapee/ProjectCylon
+3. sudo easy_install selenium
+4. git clone https://github.com/pongrapee/ProjectCylon
 
 How to use on window
 ====================
