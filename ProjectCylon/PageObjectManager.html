@@ -127,6 +127,8 @@
 		}
 
 	    function handleFileSelect(evt) {
+	    	sessionStorage.clear();
+	    	elementCount = 0;
 	    	var files = evt.target.files; // FileList object
 	    	for (var i = 0, f; f = files[i]; i++) {
 	    		 var inputFileName = escape(f.name);
@@ -199,8 +201,7 @@
 				          loadDataToFields();
 			        	};
 			    	})(f);
-
-			    	// Read in the image file as a data URL.
+			    	
       				reader.readAsText(f, 'UTF-8');
 		    	}else{
 		    		alert('Incorrect file type - expects *' + fileSuffix);
