@@ -45,8 +45,8 @@ NOTE: do not use version 1.2.3 or above -- there is an issue with Thai language.
 
 	+ edit C:\Python27\Lib\site.py
 	+ find the following 2 rows and comment them out:
-		#if hasattr(sys, "setdefaultencoding"):
-			#del sys.setdefaultencoding
+		+ #if hasattr(sys, "setdefaultencoding"):
+		+ #del sys.setdefaultencoding
 
 	+ create sitecustomize.py file at C:\Python27\Lib\site-packages with the following content
 		+ import sys
