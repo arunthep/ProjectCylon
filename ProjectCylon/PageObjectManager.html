@@ -32,7 +32,7 @@
 				updateStorage();
 				event.preventDefault();
 				//var BB = Blob();
-				saveAs(new Blob([buildSaveTargetFileContent()], {type: "text/plain;charset=" + document.characterSet}),
+				saveAs(new Blob([buildSaveTargetFileContent()], {type: "text/plain;charset=" + '"' + "UTF-8" + '"'}),
 		  		    sessionStorage['inputFileName'])
 			}
 			, false);
@@ -201,7 +201,7 @@
 				          loadDataToFields();
 			        	};
 			    	})(f);
-			    	
+
       				reader.readAsText(f, 'UTF-8');
 		    	}else{
 		    		alert('Incorrect file type - expects *' + fileSuffix);
