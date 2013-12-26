@@ -298,7 +298,7 @@ class Element( object ):
         if(self.Verify() != True):
             return
         element = self.Get()
-        result = str(element.text.encode('utf-8','ignore'))        
+        result = str(element.text.encode('utf-8','ignore'))
         value = str(World.ConvertValue(value).encode('utf-8','ignore'))
         #print str(element.text)
         if value == "":
@@ -369,11 +369,14 @@ class Page( object ):
         return self.Verify()
 
     def Verify( self ):
+        World.CurrentPageVerified=False
         if self.pageverifymethod == "Title" or self.pageverifymethod == "Any":
             if self.VerifyPageWithTitle() == True:
+                World.CurrentPageVerified=True
                 return True
         if self.pageverifymethod == "URL" or self.pageverifymethod == "Any":
             if self.VerifyPageWithURL() == True:
+                World.CurrentPageVerified=True
                 return True
         return False
 

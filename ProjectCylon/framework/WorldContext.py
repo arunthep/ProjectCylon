@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+import time
 import sys
 reload(sys); sys.setdefaultencoding('utf-8')
 
@@ -56,13 +58,20 @@ class WorldContext:
     ElementList = []
     PageList = []
     cdmlogin = False
-    dsflogin = False    
+    dsflogin = False
     CurrentPage = None
+    CurrentPageVerified = False
     _instance = None
     def __init__(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(15)
         pass
+    def DebugToFile(self, message=None, logFileName='cylon_debug.log'):
+        openFlag='w'
+        if message is not None and message.strip() != '' and logFileName is not None and logFileName.strip() !='':
+            if os.path.isfile(logFileName): openFlag = 'a'
+            with open(logFileName, openFlag) as fhandle:
+                fhandle.write(time.strftime('%m/%d/%Y %I:%M %p ') + ' ' + message + '\n')
     def GetData(self, inputfile=None, outputdata=None):
         pass
     def GoToURL(self, url):
@@ -81,7 +90,7 @@ class WorldContext:
     def FindElement(self, Name):
         for Element in self.ElementList:
             if Element.name.lower() == Name.lower():
-                if Element.parent.Verify() == True:
+                if self.CurrentPageVerified == True or Element.parent.Verify() == True:
                     return Element
         print "Element not found in ElementList"
         assert False
