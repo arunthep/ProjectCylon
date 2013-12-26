@@ -92,7 +92,7 @@ class WorldContext:
         for Element in self.ElementList:
             if Element.name.lower() == Name.lower():
                 #Skip element that exists in other page
-                if Element.parent.name != self.CurrentPageVerifiedPageName: continue
+                if self.CurrentPageVerified and Element.parent.name != self.CurrentPageVerifiedPageName: continue
                 if self.CurrentPageVerified == True or Element.parent.Verify() == True:
                     return Element
         print "Element not found in ElementList"
