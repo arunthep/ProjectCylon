@@ -373,10 +373,12 @@ class Page( object ):
         if self.pageverifymethod == "Title" or self.pageverifymethod == "Any":
             if self.VerifyPageWithTitle() == True:
                 World.CurrentPageVerified=True
+                World.CurrentPageVerifiedPageName=self.name
                 return True
         if self.pageverifymethod == "URL" or self.pageverifymethod == "Any":
             if self.VerifyPageWithURL() == True:
                 World.CurrentPageVerified=True
+                World.CurrentPageVerifiedPageName=self.name
                 return True
         return False
 
