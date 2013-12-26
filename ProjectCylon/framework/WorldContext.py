@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import time
+import datetime
 import sys
 reload(sys); sys.setdefaultencoding('utf-8')
 
@@ -61,6 +62,7 @@ class WorldContext:
     dsflogin = False
     CurrentPage = None
     CurrentPageVerified = False
+    CurrentPageVerifiedPageName = None
     _instance = None
     def __init__(self):
         self.driver = webdriver.Firefox()
@@ -71,7 +73,7 @@ class WorldContext:
         if message is not None and message.strip() != '' and logFileName is not None and logFileName.strip() !='':
             if os.path.isfile(logFileName): openFlag = 'a'
             with open(logFileName, openFlag) as fhandle:
-                fhandle.write(time.strftime('%m/%d/%Y %I:%M %p ') + ' ' + message + '\n')
+                fhandle.write(datetime.datetime.now().strftime('%m/%d/%Y %I:%M:%S.%f %p ') + ' ' + message + '\n')
     def GetData(self, inputfile=None, outputdata=None):
         pass
     def GoToURL(self, url):
@@ -90,6 +92,8 @@ class WorldContext:
     def FindElement(self, Name):
         for Element in self.ElementList:
             if Element.name.lower() == Name.lower():
+                #Skip element that exists in other page
+                if self.CurrentPageVerified and Element.parent.name != self.CurrentPageVerifiedPageName: continue
                 if self.CurrentPageVerified == True or Element.parent.Verify() == True:
                     return Element
         print "Element not found in ElementList"
