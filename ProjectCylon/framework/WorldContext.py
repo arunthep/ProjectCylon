@@ -106,7 +106,7 @@ class WorldContext:
             self.cdmlogin = True
         elif loginfunctionname == "DsfLogin" and not self.dsflogin:
             self.FindPage("DsfLoginPage").Go()
-            self.FindElement("username").SendKeys("fruit@gmail.com")
+            self.FindElement("username").SendKeys("wls.test01@gmail.com")
             self.FindElement("password").SendKeys("12345678")
             self.FindElement("login").Click()
             self.dsflogin = True
