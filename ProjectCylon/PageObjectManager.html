@@ -1,431 +1,456 @@
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>Page Object Manager | Cylon</title>
-	<link href="css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet">
-	<link rel="stylesheet" href="./css/base.css">
-	<link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
-	<link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans">
-	<script src="js/jquery-1.9.1.js"></script>
-	<script type="application/ecmascript" async="" src="js/Blob.js"></script>
-	<script type="application/ecmascript" async="" src="js/FileSaver.js"></script>
+    <meta charset="utf-8">
+    <title>Page Object Manager | Cylon</title>
+    <link href="css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/base.css">
+    <link href='http://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans">
+    <script src="js/jquery-1.9.1.js"></script>
+    <script type="application/ecmascript" async="" src="js/Blob.js"></script>
+    <script type="application/ecmascript" async="" src="js/FileSaver.js"></script>
 
-	<script src="js/jquery-ui-1.10.3.custom.js"></script>
-	<script type="text/javascript">
-	    // <![CDATA[
-	    jQuery(document).ready(function($) {
-	    	if (!(window.File && window.FileReader && window.FileList && window.Blob)){
-				alert('The File APIs are not fully supported in this browser.');
-	    	}
+    <script src="js/jquery-ui-1.10.3.custom.js"></script>
+    <script type="text/javascript">
+        // <![CDATA[
+        jQuery(document).ready(function($) {
+            if (!(window.File && window.FileReader && window.FileList && window.Blob)){
+                alert('The File APIs are not fully supported in this browser.');
+            }
 
-	    	if(!window.sessionStorage){
-				alert('The web storages are not fully supported in this browser.');
-	    	}
+            if(!window.sessionStorage){
+                alert('The web storages are not fully supported in this browser.');
+            }
 
-	    	//jQueryUI
-	    	$(function() {
-	    		$( document ).tooltip();
-	  		});
+            //jQueryUI
+            $(function() {
+                $( document ).tooltip();
+              });
 
-	    	document.getElementById('select-a-file').addEventListener('change', handleFileSelect, false);
-			document.getElementById('save-form').addEventListener('submit', function(event){
-				updateStorage();
-				event.preventDefault();
-				//var BB = Blob();
-				saveAs(new Blob([buildSaveTargetFileContent()], {type: "text/plain;charset=" + '"' + "UTF-8" + '"'}),
-		  		    sessionStorage['inputFileName'])
-			}
-			, false);
+            document.getElementById('select-a-file').addEventListener('change', handleFileSelect, false);
+            document.getElementById('save-form').addEventListener('submit', function(event){
+                updateStorage();
+                adjustFieldsBeforeSave();
+                event.preventDefault();
+                //var BB = Blob();
+                saveAs(new Blob([buildSaveTargetFileContent()], {type: "text/plain;charset=" + '"' + "UTF-8" + '"'}),
+                      sessionStorage['inputFileName'])
+            }
+            , false);
 
-			jQuery('#need-login').click(function(){
-				updatePageFromNeedLoginChange();
-			});
+            jQuery('#need-login').click(function(){
+                updatePageFromNeedLoginChange();
+            });
 
-			resetPage();
-		});
+            resetPage();
+        });
 
-	    var fileSuffix = "Page.csv";
-	    var ObjectNameIndex = 1;
-	    var NameIndex = 2;
-	    var LocatingMethodIndex = 3;
-	    var LocatorIndex = 4;
-	    var PreCheckIndex = 5;
-	    var ObjectTypeIndex = 6;
-	    var DefaultStateIndex = 7;
-	    var DefaultValueIndex = 8;
-	    var CheckAttributeIndex = 9;
-		var elementCount = 0;
+        var fileSuffix = "Page.csv";
+        var ObjectNameIndex = 1;
+        var NameIndex = 2;
+        var LocatingMethodIndex = 3;
+        var LocatorIndex = 4;
+        var PreCheckIndex = 5;
+        var ObjectTypeIndex = 6;
+        var DefaultStateIndex = 7;
+        var DefaultValueIndex = 8;
+        var CheckAttributeIndex = 9;
+        var elementCount = 0;
 
-		function updatePageFromNeedLoginChange(){
-			$('#need-login+br+div.left-label').remove();
-			$('#login-function').remove();
-			if($('#need-login').prop('checked')){
-				$('#need-login+br').after('<div class="left-label"><label title="" for="login-function" class="title-text">Login Function:</label></div><input type="text" id="login-function" class="text-input">');
-				//sessionStorage['LoginFunction'] = 'test';
-				if(sessionStorage['LoginFunction'] != ''){
-					$('#login-function').val(sessionStorage['LoginFunction']);
-				}
-			}
-		}
+        function updatePageFromNeedLoginChange(){
+            $('#need-login+br+div.left-label').remove();
+            $('#login-function').remove();
+            if($('#need-login').prop('checked')){
+                $('#need-login+br').after('<div class="left-label"><label title="" for="login-function" class="title-text">Login Function:</label></div><input type="text" id="login-function" class="text-input">');
+                //sessionStorage['LoginFunction'] = 'test';
+                if(sessionStorage['LoginFunction'] != ''){
+                    $('#login-function').val(sessionStorage['LoginFunction']);
+                }
+            }
+        }
 
-		function buildSaveTargetFileContent(){
-			var output = '';
-			output += "##Page##,,,,,,,,,\n";
-			output += "Name:," + sessionStorage['Name'] +",,,,,,,,\n";
-			output += "Title:," + sessionStorage['Title'] +",,,,,,,,\n";
-			output += "URL:," + sessionStorage['URL'] +",,,,,,,,\n";
-			output += "PageVerifyMethod:," + sessionStorage['PageVerifyMethod'] +",,,,,,,,\n";
-			output += "NeedLogin:," + sessionStorage['NeedLogin'] +",,,,,,,,\n";
-			if(sessionStorage['NeedLogin'] == 'TRUE'){
-				output += "LoginFunction:," + sessionStorage['LoginFunction'] + ",,,,,,,,";
-			}
-			output += ",,,,,,,,,\n";
-			output += "##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute\n";
-			var eleCount = parseInt(sessionStorage['elementCount']);
+        function buildSaveTargetFileContent(){
+            var output = '';
+            output += "##Page##,,,,,,,,,\n";
+            output += "Name:," + sessionStorage['Name'] +",,,,,,,,\n";
+            output += "Title:," + sessionStorage['Title'] +",,,,,,,,\n";
+            output += "URL:," + sessionStorage['URL'] +",,,,,,,,\n";
+            output += "PageVerifyMethod:," + sessionStorage['PageVerifyMethod'] +",,,,,,,,\n";
+            output += "NeedLogin:," + sessionStorage['NeedLogin'] +",,,,,,,,\n";
+            if(sessionStorage['NeedLogin'] == 'TRUE'){
+                output += "LoginFunction:," + sessionStorage['LoginFunction'] + ",,,,,,,,";
+            }
+            output += ",,,,,,,,,\n";
+            output += "##Elements##,ObjectName,Name,LocatingMethod,Locator,PreCheck,ObjectType,DefaultState,DefaultValue,CheckAttribute\n";
+            var eleCount = parseInt(sessionStorage['elementCount']);
 
-			for (var i = 0; i < eleCount; i++) {
-				var prefix = 'element_'+i;
-				output += 'Element:,' + sessionStorage[prefix+'_ObjectName'] + ',' +
-				          sessionStorage[prefix+'_Name'] + ',' +
-				          sessionStorage[prefix+'_LocatingMethod'] + ',' +
-				          sessionStorage[prefix+'_Locator']  + ',' +
-				          sessionStorage[prefix+'_PreCheck'] + ',' +
-				          sessionStorage[prefix+'_ObjectType'] + ',' +
-						  sessionStorage[prefix+'_DefaultState'] + ',' +
+            for (var i = 0; i < eleCount; i++) {
+                var prefix = 'element_'+i;
+                output += 'Element:,' + sessionStorage[prefix+'_ObjectName'] + ',' +
+                          sessionStorage[prefix+'_Name'] + ',' +
+                          sessionStorage[prefix+'_LocatingMethod'] + ',' +
+                          sessionStorage[prefix+'_Locator']  + ',' +
+                          sessionStorage[prefix+'_PreCheck'] + ',' +
+                          sessionStorage[prefix+'_ObjectType'] + ',' +
+                          sessionStorage[prefix+'_DefaultState'] + ',' +
                           sessionStorage[prefix+'_DefaultValue'] + ',' +
-				          sessionStorage[prefix+'_CheckAttribute'] + "\n";
-			}
-			return output;
-		}
+                          sessionStorage[prefix+'_CheckAttribute'] + "\n";
+            }
+            return output;
+        }
 
-		function updateStorage(){
-			sessionStorage['Name']=$('#page-name').val();
-			sessionStorage['Title']=$('#page-title').val();
-			sessionStorage['URL']=$('#page-url').val();
-			sessionStorage['PageVerifyMethod']=$('#page-verify-method').val();
-			flag = $('#need-login').prop('checked') ? 'TRUE':'FALSE';
-			sessionStorage['NeedLogin']=flag;
-			sessionStorage['LoginFunction']=$('#login-function').val();
+        function adjustFieldsBeforeSave(){
+            var eleCount = parseInt(sessionStorage['elementCount']);
+            if(eleCount){
+                var indexRun = 0;
+                $('#element-table tbody tr').each(function(){
+                    var prefix = 'element_'+indexRun;
+                    sessionStorage[prefix+'_Locator']=addDoubleQuoteChar($(this).find('td:eq('+ LocatorIndex + ')').html().trim().replace('&nbsp;', ''));
 
-			var eleCount = parseInt(sessionStorage['elementCount']);
-			if(eleCount){
-				var indexRun = 0;
-				$('#element-table tbody tr').each(function(){
-					var prefix = 'element_'+indexRun;
-					sessionStorage[prefix+'_ObjectName']=$(this).find('td:eq('+ ObjectNameIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_Name']=$(this).find('td:eq('+ NameIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_LocatingMethod']=$(this).find('td:eq('+ LocatingMethodIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_Locator']=addDoubleQuoteChar($(this).find('td:eq('+ LocatorIndex + ')').html().replace('&nbsp;', ''));
-					sessionStorage[prefix+'_PreCheck']=$(this).find('td:eq('+ PreCheckIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_ObjectType']=$(this).find('td:eq('+ ObjectTypeIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_DefaultState']=$(this).find('td:eq('+ DefaultStateIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_DefaultValue']=$(this).find('td:eq('+ DefaultValueIndex + ')').html().replace('&nbsp;', '');
-					sessionStorage[prefix+'_CheckAttribute']=addDoubleQuoteChar($(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace('&nbsp;', ''));
-					indexRun++;
-				});
-			}
-		}
+                    var htmlContent = $(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_CheckAttribute']=addDoubleQuoteChar(htmlContent);
 
-	    function handleFileSelect(evt) {
-	    	sessionStorage.clear();
-	    	elementCount = 0;
-	    	var files = evt.target.files; // FileList object
-	    	for (var i = 0, f; f = files[i]; i++) {
-	    		 var inputFileName = escape(f.name);
-	    		 var inputFileNameSuffix = inputFileName.substr(inputFileName.length - fileSuffix.length);
-	    		 if(fileSuffix.toLowerCase() == inputFileNameSuffix.toLowerCase()){
-		    		// file type OK
-		    		sessionStorage['inputFileName'] = inputFileName;
+                    indexRun++;
+                });
+            }
+        }
 
-		    		var reader = new FileReader();
-					// Closure to capture the file information.
-				    reader.onload = (function(theFile) {
-			        return function(e) {
-				          sessionStorage['fileContentText'] = e.target.result;
-				          //extract value into vars
-				          var lines = ((String)(e.target.result)).split("\n");
-				          for (var ll = 0; ll < lines.length; ll++) {
-				          		var line = lines[ll].trim();
-				          		if(line.indexOf('Name:,') > -1){
-				          			var cols = line.split(',');
-				          			//var pageName = cols[1];
-				          			sessionStorage['Name']=cols[1];
-				          		}
+        function updateStorage(){
+            sessionStorage['Name']=$('#page-name').val();
+            sessionStorage['Title']=$('#page-title').val();
+            sessionStorage['URL']=$('#page-url').val();
+            sessionStorage['PageVerifyMethod']=$('#page-verify-method').val();
+            flag = $('#need-login').prop('checked') ? 'TRUE':'FALSE';
+            sessionStorage['NeedLogin']=flag;
+            sessionStorage['LoginFunction']=$('#login-function').val();
 
-				          		if(line.indexOf('Title:,') > -1){
-				          			var cols = line.split(',');
-				          			//var pageTitle = cols[1];
-				          			sessionStorage['Title']=cols[1];
-				          		}
+            var eleCount = parseInt(sessionStorage['elementCount']);
+            if(eleCount){
+                var indexRun = 0;
+                $('#element-table tbody tr').each(function(){
+                    var prefix = 'element_'+indexRun;
+                    sessionStorage[prefix+'_ObjectName']=$(this).find('td:eq('+ ObjectNameIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_Name']=$(this).find('td:eq('+ NameIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_LocatingMethod']=$(this).find('td:eq('+ LocatingMethodIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_Locator']=$(this).find('td:eq('+ LocatorIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_PreCheck']=$(this).find('td:eq('+ PreCheckIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_ObjectType']=$(this).find('td:eq('+ ObjectTypeIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_DefaultState']=$(this).find('td:eq('+ DefaultStateIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_DefaultValue']=$(this).find('td:eq('+ DefaultValueIndex + ')').html().replace(/&nbsp;/g, '').trim();
 
-				          		if(line.indexOf('URL:,') > -1){
-				          			var cols = line.split(',');
-				          			//var pageURL = cols[1];
-				          			sessionStorage['URL']=cols[1];
-				          		}
+                    sessionStorage[prefix+'_CheckAttribute']='';
+                    var htmlContent = $(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    if(htmlContent.length > 0){
+                        sessionStorage[prefix+'_CheckAttribute']=htmlContent;
+                    }
 
-				          		if(line.indexOf('PageVerifyMethod:,') > -1){
-				          			var cols = line.split(',');
-				          			//var pagePageVerifyMethod = cols[1];
-				          			sessionStorage['PageVerifyMethod']=cols[1];
-				          		}
+                    indexRun++;
+                });
+            }
+        }
 
-								if(line.indexOf('NeedLogin:,') > -1){
-				          			var cols = line.split(',');
-				          			//var pageNeedLogin = cols[1];
-				          			sessionStorage['NeedLogin']=cols[1];
-				          		}
+        function handleFileSelect(evt) {
+            sessionStorage.clear();
+            elementCount = 0;
+            var files = evt.target.files; // FileList object
+            for (var i = 0, f; f = files[i]; i++) {
+                 var inputFileName = escape(f.name);
+                 var inputFileNameSuffix = inputFileName.substr(inputFileName.length - fileSuffix.length);
+                 if(fileSuffix.toLowerCase() == inputFileNameSuffix.toLowerCase()){
+                    // file type OK
+                    sessionStorage['inputFileName'] = inputFileName;
 
-				          		if(line.indexOf('LoginFunction:,') > -1){
-				          			var cols = line.split(',');
-				          			//var pageNeedLogin = cols[1];
-				          			sessionStorage['LoginFunction']=cols[1];
-				          		}
+                    var reader = new FileReader();
+                    // Closure to capture the file information.
+                    reader.onload = (function(theFile) {
+                    return function(e) {
+                        sessionStorage['fileContentText'] = e.target.result;
+                        //extract value into vars
+                        var lines = ((String)(e.target.result)).split("\n");
+                        for (var ll = 0; ll < lines.length; ll++) {
+                            var line = lines[ll].trim();
+                            if(line.indexOf('Name:,') > -1){
+                                var cols = line.split(',');
+                                //var pageName = cols[1];
+                                sessionStorage['Name']=cols[1];
+                            }
 
-				          		if(line.indexOf('Element:,') > -1){
-				          			var cols = line.split(',');
-				          			var prefix = 'element_'+elementCount;
-				          			sessionStorage[prefix+'_ObjectName']=cols[ObjectNameIndex];
-				          			sessionStorage[prefix+'_Name']=cols[NameIndex];
-				          			sessionStorage[prefix+'_LocatingMethod']=cols[LocatingMethodIndex];
-				          			sessionStorage[prefix+'_Locator']=stripDoubleQuoteChar(cols[LocatorIndex]);
-				          			sessionStorage[prefix+'_PreCheck']=cols[PreCheckIndex];
-				          			sessionStorage[prefix+'_ObjectType']=cols[ObjectTypeIndex];
-				          			sessionStorage[prefix+'_DefaultState']=cols[DefaultStateIndex];
-				          			sessionStorage[prefix+'_DefaultValue']=cols[DefaultValueIndex];
-				          			sessionStorage[prefix+'_CheckAttribute']=stripDoubleQuoteChar(cols[CheckAttributeIndex]);
-				          			elementCount++;
-				          		}
-				          }
-				          sessionStorage['elementCount']=elementCount;
-				          loadDataToFields();
-			        	};
-			    	})(f);
+                            if(line.indexOf('Title:,') > -1){
+                                var cols = line.split(',');
+                                //var pageTitle = cols[1];
+                                sessionStorage['Title']=cols[1];
+                            }
 
-      				reader.readAsText(f, 'UTF-8');
-		    	}else{
-		    		alert('Incorrect file type - expects *' + fileSuffix);
-		    		resetPage();
-		    	}
-	    	}
-	    }
+                            if(line.indexOf('URL:,') > -1){
+                                var cols = line.split(',');
+                                //var pageURL = cols[1];
+                                sessionStorage['URL']=cols[1];
+                            }
 
-	    function deleteElement(){
-	    	var answer = prompt('Specify index to be deleted.');
-	    	if(answer && (parseInt(answer) > 0)){
-	    		var index = parseInt(answer);
-	    		var eleCount = parseInt(sessionStorage['elementCount']);
-	    		if(index <= eleCount){
-    				var targetRow = $('#element-table tbody tr:eq(' + (index - 1) + ')');
-    				if(targetRow.length == 1){
-    					targetRow.remove();
-    					sessionStorage['elementCount']=--eleCount;
-    					// refresh element table data
-						updateStorage();
-						loadDataToFields();
-    				}
-	    		}
-	    	}
-	    }
+                            if(line.indexOf('PageVerifyMethod:,') > -1){
+                                var cols = line.split(',');
+                                //var pagePageVerifyMethod = cols[1];
+                                sessionStorage['PageVerifyMethod']=cols[1];
+                            }
 
-	    function addNewElement(){
-	    	var lastRow=$('#element-table tbody tr:last');
-	    	if(lastRow.length == 0){
-	    		lastRow=$('#element-table tbody');
-	    		var newRow = $("<tr>");
-				newRow.append(buildEmptyColumnHTML(0));
-				lastRow.append(newRow);
-				var eleCount = parseInt(sessionStorage['elementCount']);
-				sessionStorage['elementCount']=++eleCount;
-	    	}else{
-				var newRow = lastRow.clone();
-				var eleCount = parseInt(sessionStorage['elementCount']);
-				sessionStorage['elementCount']=++eleCount;
-				newRow.find('td:eq(0)').html(eleCount);
-				newRow.insertAfter(lastRow);
-	    	}
-	    }
+                            if(line.indexOf('NeedLogin:,') > -1){
+                                var cols = line.split(',');
+                                //var pageNeedLogin = cols[1];
+                                sessionStorage['NeedLogin']=cols[1];
+                            }
 
-	    function removeAllElementRows(){
-	    	var allRows = $('#element-table tbody tr');
-	    	allRows.remove();
-	    }
+                            if(line.indexOf('LoginFunction:,') > -1){
+                                var cols = line.split(',');
+                                //var pageNeedLogin = cols[1];
+                                sessionStorage['LoginFunction']=cols[1];
+                            }
 
-	    function loadDataToFields(){
-	    	removeAllElementRows();
-			$('#page-name').val(sessionStorage['Name']);
-			$('#page-title').val(sessionStorage['Title']);
-			$('#page-url').val(sessionStorage['URL']);
-			$('#page-verify-method').val(sessionStorage['PageVerifyMethod']);
-			$('#need-login').prop('checked', sessionStorage['NeedLogin'] == 'TRUE' ? true:false);
-			updatePageFromNeedLoginChange();
-			var eleCount = parseInt(sessionStorage['elementCount']);
-			for (var ll = 0; ll < eleCount ; ll++) {
-    			var lastRow=$('#element-table tbody tr:last');
-    			if(lastRow.length == 0){
-    				lastRow=$('#element-table tbody');
-    				var newRow = $("<tr>");
-					newRow.append(buildColumnHTML(ll));
-					lastRow.append(newRow);
-    			}else{
-    				var newRow = $("<tr>");
-    				newRow.append(buildColumnHTML(ll));
-    				newRow.insertAfter(lastRow);
-    			}
-			}
-	    }
+                            if(line.indexOf('Element:,') > -1){
+                                var cols = line.split(',');
+                                var prefix = 'element_'+elementCount;
+                                sessionStorage[prefix+'_ObjectName']=cols[ObjectNameIndex];
+                                sessionStorage[prefix+'_Name']=cols[NameIndex];
+                                sessionStorage[prefix+'_LocatingMethod']=cols[LocatingMethodIndex];
+                                sessionStorage[prefix+'_Locator']=stripDoubleQuoteChar(cols[LocatorIndex]);
+                                sessionStorage[prefix+'_PreCheck']=cols[PreCheckIndex];
+                                sessionStorage[prefix+'_ObjectType']=cols[ObjectTypeIndex];
+                                sessionStorage[prefix+'_DefaultState']=cols[DefaultStateIndex];
+                                sessionStorage[prefix+'_DefaultValue']=cols[DefaultValueIndex];
+                                sessionStorage[prefix+'_CheckAttribute']=stripDoubleQuoteChar(cols[CheckAttributeIndex]);
+                                elementCount++;
+                            }
+                          }
+                          sessionStorage['elementCount']=elementCount;
+                          loadDataToFields();
+                        };
+                    })(f);
 
-	    function buildEmptyColumnHTML(elementIndex){
-	    	var prefix = 'element_'+elementIndex;
-	    	var cols = '';
-	    	cols += '<td>' + (elementIndex+1) + '</td>';
-	    	cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-			return cols;
-	    }
+                      reader.readAsText(f, 'UTF-8');
+                }else{
+                    alert('Incorrect file type - expects *' + fileSuffix);
+                    resetPage();
+                }
+            }
+        }
 
-	    function buildColumnHTML(elementIndex){
-	    	var prefix = 'element_'+elementIndex;
-	    	var cols = '';
-	    	cols += '<td>' + (elementIndex+1) + '</td>';
-	    	cols += '<td contenteditable="true">' + sessionStorage[prefix+'_ObjectName'] + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_Name'] + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_LocatingMethod'] + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_Locator'] + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_PreCheck'] + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_ObjectType'] + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_DefaultState'] + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_DefaultValue'] + '&nbsp' + '</td>';
-			cols += '<td contenteditable="true">' + sessionStorage[prefix+'_CheckAttribute'] + '&nbsp'+ '</td>';
-			return cols;
-	    }
+        function deleteElement(){
+            var answer = prompt('Specify index to be deleted.');
+            if(answer && (parseInt(answer) > 0)){
+                var index = parseInt(answer);
+                var eleCount = parseInt(sessionStorage['elementCount']);
+                if(index <= eleCount){
+                    var targetRow = $('#element-table tbody tr:eq(' + (index - 1) + ')');
+                    if(targetRow.length == 1){
+                        targetRow.remove();
+                        sessionStorage['elementCount']=--eleCount;
+                        // refresh element table data
+                        updateStorage();
+                        loadDataToFields();
+                    }
+                }
+            }
+        }
 
-	    function newPageObjectFile(){
-	    	var inputFileName = prompt('Please enter a new file name');
-	    	if(inputFileName){
-		    	var inputFileNameSuffix = inputFileName.substr(inputFileName.length - fileSuffix.length);
-		    	if(fileSuffix.toLowerCase()	== inputFileNameSuffix.toLowerCase()){
-		    		inputFileName = inputFileName.substr(0, inputFileName.length - fileSuffix.length) + fileSuffix;
-		    	}else{
-		    		inputFileName = inputFileName + fileSuffix;
-		    	}
-		    	sessionStorage['inputFileName'] = inputFileName;
-		    	document.getElementById('lbl-file-name').innerHTML = '[New file name = ' + inputFileName + ']';
-		    	$('#select-a-file').val('');
-	    	}
-	    }
+        function addNewElement(){
+            var lastRow=$('#element-table tbody tr:last');
+            if(lastRow.length == 0){
+                lastRow=$('#element-table tbody');
+                var newRow = $("<tr>");
+                newRow.append(buildEmptyColumnHTML(0));
+                lastRow.append(newRow);
+                var eleCount = parseInt(sessionStorage['elementCount']);
+                sessionStorage['elementCount']=++eleCount;
+            }else{
+                var newRow = lastRow.clone();
+                var eleCount = parseInt(sessionStorage['elementCount']);
+                sessionStorage['elementCount']=++eleCount;
+                newRow.find('td:eq(0)').html(eleCount);
+                newRow.insertAfter(lastRow);
+            }
+        }
 
-	    function resetPage(){
-	    	$('#select-a-file').val('');
-	    	$('#page-name').val('');
-			$('#page-title').val('');
-			$('#page-url').val('');
-			$('#page-verify-method').val('');
-			$('#need-login').prop('checked', false);
-	    	sessionStorage['inputFileName'] = '';
-	    	sessionStorage['elementCount'] = 0;
-	    	removeAllElementRows();
-	    }
+        function removeAllElementRows(){
+            var allRows = $('#element-table tbody tr');
+            allRows.remove();
+        }
 
-	    function stripDoubleQuoteChar(inputStr){
-	    	if(inputStr.length >= 2 && inputStr[0] == '"' && inputStr[inputStr.length - 1] == '"'){
-	    		inputStr=inputStr.substring(1, inputStr.length - 1);
-	    	}
-			inputStr = inputStr.replace(/""/g, '"');
-			return inputStr;
-	    }
+        function loadDataToFields(){
+            removeAllElementRows();
+            $('#page-name').val(sessionStorage['Name']);
+            $('#page-title').val(sessionStorage['Title']);
+            $('#page-url').val(sessionStorage['URL']);
+            $('#page-verify-method').val(sessionStorage['PageVerifyMethod']);
+            $('#need-login').prop('checked', sessionStorage['NeedLogin'] == 'TRUE' ? true:false);   
+            updatePageFromNeedLoginChange();
+            var eleCount = parseInt(sessionStorage['elementCount']);
+            for (var ll = 0; ll < eleCount ; ll++) {
+                var lastRow=$('#element-table tbody tr:last');
+                if(lastRow.length == 0){
+                    lastRow=$('#element-table tbody');
+                    var newRow = $("<tr>");
+                    newRow.append(buildColumnHTML(ll));
+                    lastRow.append(newRow);
+                }else{
+                    var newRow = $("<tr>");
+                    newRow.append(buildColumnHTML(ll));
+                    newRow.insertAfter(lastRow);
+                }
+            }
+        }
 
-	    function addDoubleQuoteChar(inputStr){
-	    	if(inputStr.indexOf('"') > 0){
-    			inputStr = inputStr.replace(/"/g, '""');
-	    	}
-	    	inputStr = '"' + inputStr + '"';
-	    	return inputStr;
-	    }
+        function buildEmptyColumnHTML(elementIndex){
+            var prefix = 'element_'+elementIndex;
+            var cols = '';
+            cols += '<td>' + (elementIndex+1) + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            return cols;
+        }
 
-		// ]]>
-  	</script>
+        function buildColumnHTML(elementIndex){
+            var prefix = 'element_'+elementIndex;
+            var cols = '';
+            cols += '<td>' + (elementIndex+1) + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_ObjectName'] + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_Name'] + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_LocatingMethod'] + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_Locator'] + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_PreCheck'] + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_ObjectType'] + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_DefaultState'] + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_DefaultValue'] + '&nbsp' + '</td>';
+            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_CheckAttribute'] + '&nbsp'+ '</td>';
+            return cols;
+        }
+
+        function newPageObjectFile(){
+            var inputFileName = prompt('Please enter a new file name');
+            if(inputFileName){
+                var inputFileNameSuffix = inputFileName.substr(inputFileName.length - fileSuffix.length);
+                if(fileSuffix.toLowerCase()    == inputFileNameSuffix.toLowerCase()){
+                    inputFileName = inputFileName.substr(0, inputFileName.length - fileSuffix.length) + fileSuffix;
+                }else{
+                    inputFileName = inputFileName + fileSuffix;
+                }
+                sessionStorage['inputFileName'] = inputFileName;
+                document.getElementById('lbl-file-name').innerHTML = '[New file name = ' + inputFileName + ']';
+                $('#select-a-file').val('');
+            }
+        }
+
+        function resetPage(){
+            $('#select-a-file').val('');
+            $('#page-name').val('');
+            $('#page-title').val('');
+            $('#page-url').val('');
+            $('#page-verify-method').val('');
+            $('#need-login').prop('checked', false);
+            sessionStorage['inputFileName'] = '';
+            sessionStorage['elementCount'] = 0;
+            removeAllElementRows();
+        }
+
+        // Fits for "//*[@id=""save-file""]" input
+        function stripDoubleQuoteChar(inputStr){
+            if(inputStr.length >= 2 && inputStr[0] == '"' && inputStr[inputStr.length - 1] == '"'){
+                inputStr=inputStr.substring(1, inputStr.length - 1);
+            }
+            inputStr = inputStr.replace(/""/g, '"');
+            return inputStr;
+        }
+
+        // Fits for //*[@id="save-file"] -> "//*[@id=""save-file""]"
+        function addDoubleQuoteChar(inputStr){
+            if(inputStr.indexOf('"') > 0){
+                inputStr = inputStr.replace(/"/g, '""');
+            }
+            inputStr = '"' + inputStr + '"';
+            return inputStr;
+        }
+
+        // ]]>
+      </script>
 </head>
 <body>
-	<header>
-		<h1>Page Object Definition</h1>
-		<label class="version">rev. 3</label><br />
-	</header>
-	<section class="page-list-section">
-		<div id="error-placeholder"></div>
+    <header>
+        <h1>Page Object Definition</h1>
+        <label class="version">rev. 3</label><br />
+    </header>
+    <section class="page-list-section">
+        <div id="error-placeholder"></div>
 
-		<button id="new-file" class="btn btn-primary" onclick="newPageObjectFile();">New Page Object File</button>
-		<label id="lbl-file-name" for="new-file" class="literal">[New file name = &lt; empty &gt;]</label><br /><br />
-		<label for="" class="literal">OR</label><br /><br />
-		<input type="file" id="select-a-file" class="btn btn-primary" />
-		<hr />
-	</section>
-	<section class="page-section">
-		<header>
-			<h3>Page Definition</h3>
-		</header>
-		<div class="left-label">
-			<label title="Use in .feature file" for="page-name" class="title-text">Page Name:</label>
-		</div>
-		<input type="text" id="page-name" class="text-input"></input><br />
-		<div class="left-label">
-			<label title="" for="page-title" class="title-text">Title:</label>
-		</div>
-		<input type="text" id="page-title" class="text-input"></input><br />
-		<div class="left-label">
-			<label title="" for="page-url" class="title-text">URL:</label>
-		</div>
-		<input type="text" id="page-url" class="url-input"></input><br />
-		<div class="left-label">
-			<label title="" for="page-verify-method" class="title-text">Page Verify Method:</label>
-		</div>
-		<input type="text" id="page-verify-method" class="text-input"></input><br />
-		<div class="left-label">
-			<label title="" for="need-login" class="title-text">Need Login:</label>
-		</div>
-		<input type="checkbox" id="need-login"></input><br />
+        <button id="new-file" class="btn btn-primary" onclick="newPageObjectFile();">New Page Object File</button>
+        <label id="lbl-file-name" for="new-file" class="literal">[New file name = &lt; empty &gt;]</label><br /><br />
+        <label for="" class="literal">OR</label><br /><br />
+        <input type="file" id="select-a-file" class="btn btn-primary" />
+        <hr />
+    </section>
+    <section class="page-section">
+        <header>
+            <h3>Page Definition</h3>
+        </header>
+        <div class="left-label">
+            <label title="Use in .feature file" for="page-name" class="title-text">Page Name:</label>
+        </div>
+        <input type="text" id="page-name" class="text-input"></input><br />
+        <div class="left-label">
+            <label title="" for="page-title" class="title-text">Title:</label>
+        </div>
+        <input type="text" id="page-title" class="text-input"></input><br />
+        <div class="left-label">
+            <label title="" for="page-url" class="title-text">URL:</label>
+        </div>
+        <input type="text" id="page-url" class="url-input"></input><br />
+        <div class="left-label">
+            <label title="" for="page-verify-method" class="title-text">Page Verify Method:</label>
+        </div>
+        <input type="text" id="page-verify-method" class="text-input"></input><br />
+        <div class="left-label">
+            <label title="" for="need-login" class="title-text">Need Login:</label>
+        </div>
+        <input type="checkbox" id="need-login"></input><br />
 
 
-		<section class="element-section">
-			<header>
-				<h4>Element Definition</h4>
-			</header>
-			<span id="lbl-element-delete-note">(The table content can be edited directly)</span>
-			<table id="element-table" border="1">
-				<thead>
-					<tr>
-						<th>No.</th>
-	      				<th>ObjectName</th>
-	      				<th>Name</th>
-	      				<th>LocatingMethod</th>
-	      				<th>Locator</th>
-	      				<th>PreCheck</th>
-	      				<th>ObjectType</th>
-	      				<th>DefaultState</th>
-	      				<th>DefaultValue</th>
-	      				<th>CheckAttribute</th>
-	    			</tr>
-				</thead>
-				<tbody>
-	  			</tbody>
-			</table>
-			<button id="new-element" class="btn btn-primary" onclick="addNewElement();">New Element</button>
-			<button id="new-element" class="btn btn-primary" onclick="deleteElement();">Delete Element</button>
-		</section>
-		<hr />
-		<form id="save-form">
-			<button id="save-file" class="btn btn-info">Save Changes</input>
-		</form>
-		<button id="reset-btn" class="btn btn-info" onclick="resetPage();">Reset</button>
-		<br /><br />
-	</section>
+        <section class="element-section">
+            <header>
+                <h4>Element Definition</h4>
+            </header>
+            <span id="lbl-element-delete-note">(The table content can be edited directly)</span>
+            <table id="element-table" border="1">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                          <th>ObjectName</th>
+                          <th>Name</th>
+                          <th>LocatingMethod</th>
+                          <th>Locator</th>
+                          <th>PreCheck</th>
+                          <th>ObjectType</th>
+                          <th>DefaultState</th>
+                          <th>DefaultValue</th>
+                          <th>CheckAttribute</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  </tbody>
+            </table>
+            <button id="new-element" class="btn btn-primary" onclick="addNewElement();">New Element</button>
+            <button id="new-element" class="btn btn-primary" onclick="deleteElement();">Delete Element</button>
+        </section>
+        <hr />
+        <form id="save-form">
+            <button id="save-file" class="btn btn-info">Save Changes</input>
+        </form>
+        <button id="reset-btn" class="btn btn-info" onclick="resetPage();">Reset</button>
+        <br /><br />
+    </section>
 
 
 </body>
