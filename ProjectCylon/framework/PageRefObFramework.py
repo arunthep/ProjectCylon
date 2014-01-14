@@ -2,7 +2,6 @@
 from framework.WorldContext import *
 World = WorldContext.Instance()
 
-import unittest
 from urlparse import urlparse
 
 #== Use Color ==#
@@ -84,7 +83,7 @@ class Element( object ):
         self.defaultvalue = defaultvalue
         self.availablevalue = availablevalue
         self.checkattribute = checkattribute
-
+        
     def check_exists( self ):
         if self.locatingmethod == "name":
             try:
