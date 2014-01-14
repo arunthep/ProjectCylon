@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*- 
 from framework.WorldContext import *
-World = WorldContext.Instance()
-
 from behave import *
 import pageobject.AllPages
 
@@ -33,7 +31,15 @@ def step(context, Link):
 	Element = World.FindElement(Link)
 	if Element is not None :
 		return Element.Click()		
-		
+
+#Example: When User uploads file 'd:\\file.txt' to [upload]
+@when ("User uploads file '{filePath}' to [{fileUploadElement}]")
+def step(context, filePath, fileUploadElement):
+	Element = World.FindElement(fileUploadElement)
+	if Element is not None :
+		if Element.SendKeys(filePath) == False :
+			assert False
+
 @Then ("The system displays [{PageName}]")
 def step(context, PageName):
 	Page = World.FindPage( PageName )

@@ -11,7 +11,7 @@ from selenium.common.exceptions        import TimeoutException
 from selenium.webdriver.support.ui     import WebDriverWait
 from selenium.webdriver.support        import expected_conditions as EC
 import selenium.webdriver.support.ui                              as ui
-import time
+
 
 class Singleton:
     """
@@ -123,7 +123,7 @@ class WorldContext:
             self.FindElement("password").SendKeys("12345678")
             self.FindElement("login").Click()
             self.dsflogin = True
-	else:
+        else:
             print "Login Function {name} not found".format(name=loginfunctionname)
             pass
     def Find(self, ItemID, ItemListID):
