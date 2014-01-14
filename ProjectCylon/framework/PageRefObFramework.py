@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from framework.WorldContext import *
 from urlparse import urlparse
+import sys
 
 #== Use Color ==#
 usecolor = True
@@ -71,7 +72,7 @@ class Element( object ):
                   checkattribute = None,
                   ):
         self.name = name
-        self.locatingmethod=locatingmethod
+        self.locatingmethod=locatingmethod.lower()
         self.locator=locator
         self.parent = parent
         World.ElementList.append( self )
@@ -96,8 +97,10 @@ class Element( object ):
                 print "notfound"
                 return False
             return True
-        Assert(False, "Invalid Locator Method")
-
+        else:
+            print "Invalid Locator Method"
+            return False
+        
     def Get( self ):
         element = None
 
