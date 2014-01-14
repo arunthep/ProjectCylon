@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from framework.WorldContext import *
-World = WorldContext.Instance()
-
 from urlparse import urlparse
 
 #== Use Color ==#
