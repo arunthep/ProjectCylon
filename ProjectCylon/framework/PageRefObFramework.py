@@ -273,7 +273,11 @@ class Element(object):
             return False
         element = self.Get()
         resultText = str(element.text.encode('utf-8', 'ignore'))
-        resultValue = str(element.get_attribute('value').encode('utf-8', 'ignore'))
+        resultValue = element.get_attribute('value')
+        if resultValue is not None:
+            resultValue = str(resultValue.encode('utf-8', 'ignore'))
+        else:
+            resultValue = ""
         # World.DebugToFile('self.locator=' + self.locator)
         # World.DebugToFile('resultText=' + resultText)
         # World.DebugToFile('resultValue=' + resultValue)
@@ -349,7 +353,11 @@ class Element(object):
             return False
         element = self.Get()
         textValue = str(element.text.encode('utf-8', 'ignore'))
-        currentValue = str(element.get_attribute('value').encode('utf-8', 'ignore'))
+        currentValue = element.get_attribute('value')
+        if currentValue is not None:
+            currentValue = str(currentValue.encode('utf-8', 'ignore'))
+        else:
+            currentValue = ""
         if textValue != "" or currentValue != "" :
             return False
         else:
