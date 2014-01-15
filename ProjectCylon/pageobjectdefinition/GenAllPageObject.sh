@@ -6,7 +6,7 @@ do
     python ./GenPageObject.py --InputFile "$i" --OutputDir ./../pageobject   
 done
 
-rm ./../pageobject/AllPages.py
+#rm ./../pageobject/AllPages.py
 
 echo #All Page Objects > ./../pageobject/AllPages.py
 

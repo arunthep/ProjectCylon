@@ -3,7 +3,7 @@
 
 python ./GenPageObject.py --InputFile "$1" --OutputDir ./../pageobject
 
-rm ./../pageobject/AllPages.py
+#rm ./../pageobject/AllPages.py
 
 echo #All Page Objects > ./../pageobject/AllPages.py
 
