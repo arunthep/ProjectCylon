@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from framework.WorldContext import *
 from urlparse import urlparse
+from selenium.common.exceptions import NoSuchElementException
 import sys
 import time
 
-#== Use Color ==#
+# == Use Color ==#
 usecolor = True
 # before changing to true, run "pip install colorama" in commandline
 # and uncomment the 2 lines below first
@@ -18,36 +19,36 @@ else:
     pass
 
 codeCodes = {
-    'black':    '0;30',     'bright gray':  '0;37',
-    'blue':     '0;34',     'white':        '1;37',
-    'green':    '0;32',     'bright blue':  '1;34',
-    'cyan':     '0;36',     'bright green': '1;32',
-    'red':      '0;31',     'bright cyan':  '1;36',
-    'purple':   '0;35',     'bright red':   '1;31',
-    'yellow':   '0;33',     'bright purple':'1;35',
-    'dark gray':'1;30',     'bright yellow':'1;33',
+    'black':    '0;30', 'bright gray':  '0;37',
+    'blue':     '0;34', 'white':        '1;37',
+    'green':    '0;32', 'bright blue':  '1;34',
+    'cyan':     '0;36', 'bright green': '1;32',
+    'red':      '0;31', 'bright cyan':  '1;36',
+    'purple':   '0;35', 'bright red':   '1;31',
+    'yellow':   '0;33', 'bright purple':'1;35',
+    'dark gray':'1;30', 'bright yellow':'1;33',
     'normal':   '0'
 }
 
 def printc(text, color):
     """Print in color."""
     if usecolor == True:
-        print "\033["+codeCodes[color]+"m"+text+"\033[0m",
+        print "\033[" + codeCodes[color] + "m" + text + "\033[0m",
     else:
         print text,
 
 def writec(text, color):
     """Write to stdout in color."""
     if usecolor == True:
-        sys.stdout.write("\033["+codeCodes[color]+"m"+text+"\033[0m")
+        sys.stdout.write("\033[" + codeCodes[color] + "m" + text + "\033[0m")
     else:
         sys.stdout.write(text)
 
 def switchColor(color):
     """Switch console color."""
-    sys.stdout.write("\033["+codeCodes[color]+"m")
+    sys.stdout.write("\033[" + codeCodes[color] + "m")
 
-class Element( object ):
+class Element(object):
     name = ""
     locatingmethod = "name"
     locator = ""
@@ -60,31 +61,31 @@ class Element( object ):
     availablevalue = None
     checkattribute = None
 
-    def __init__( self,
+    def __init__(self,
                   name="",
                   parent=None,
                   locatingmethod="name",
                   locator="",
                   functionbeforecheckelement=None,
-                  objecttype = None ,
-                  defaultstate = None,
-                  defaultvalue = None,
-                  availablevalue = None,
-                  checkattribute = None,
+                  objecttype=None ,
+                  defaultstate=None,
+                  defaultvalue=None,
+                  availablevalue=None,
+                  checkattribute=None,
                   ):
         self.name = name
-        self.locatingmethod=locatingmethod.lower()
-        self.locator=locator
+        self.locatingmethod = locatingmethod.lower()
+        self.locator = locator
         self.parent = parent
-        World.ElementList.append( self )
+        World.ElementList.append(self)
         self.functionbeforecheckelement = functionbeforecheckelement
         self.objecttype = objecttype
         self.defaultstate = defaultstate
         self.defaultvalue = defaultvalue
         self.availablevalue = availablevalue
         self.checkattribute = checkattribute
-        
-    def check_exists( self ):
+
+    def check_exists(self):
         if self.locatingmethod == "name":
             try:
                 World.driver.find_element_by_name(self.locator)
@@ -95,20 +96,19 @@ class Element( object ):
             try:
                 World.driver.find_element_by_xpath(self.locator)
             except NoSuchElementException:
-                print "notfound"
                 return False
             return True
         else:
             print "Invalid Locator Method"
             return False
-        
-    def Get( self ):
+
+    def Get(self):
         element = None
 
-        wait = ui.WebDriverWait(World.driver,3)
+        wait = ui.WebDriverWait(World.driver, 3)
         try:
-            #print "checking"
-            wait.until(lambda driver : check_exists() != False)
+            # print "checking"
+            wait.until(lambda driver : self.check_exists() != False)
         except:
             pass
 
@@ -121,78 +121,78 @@ class Element( object ):
             pass
         return element
 
-    def Click( self ):
-        if( self.Verify() == False ):
+    def Click(self):
+        if(self.Verify() == False):
             return False
         element = self.Get()
         element.click()
         return True
 
 #Verify Enable and Disable ---------------------------------------------------------------------------
-    def VerifyIsEnabled( self ):
-        if( self.Verify() == False ):
+    def VerifyIsEnabled(self):
+        if(self.Verify() == False):
             return False
         element = self.Get()
         print(" VerifyIsEnabled : ",)
-        if( element.is_enabled() == True):
-            printc( "passed" + "\n", "bright green" )
+        if(element.is_enabled() == True):
+            printc("passed" + "\n", "bright green")
             return True
         else:
-            printc( "failed" + "\n", "bright red" )
+            printc("failed" + "\n", "bright red")
             return False
 
-    def VerifyIsDisabled( self ):
-        if( self.Verify() == False ):
+    def VerifyIsDisabled(self):
+        if(self.Verify() == False):
             return False
         element = self.Get()
         print(" VerifyIsDisabled : ",)
-        if( element.is_enabled() == False):
-            printc( "passed" + "\n", "bright green" )
+        if(element.is_enabled() == False):
+            printc("passed" + "\n", "bright green")
             return True
         else:
-            printc( "failed" + "\n", "bright red" )
+            printc("failed" + "\n", "bright red")
             return False
 #Verify Enable and Disable ---------------------------------------------------------------------------
 
 #Verify Check and Uncheck ----------------------------------------------------------------------------
 
-    def VerifyIsChecked( self ):
-        if( self.Verify() == False ):
+    def VerifyIsChecked(self):
+        if(self.Verify() == False):
             return False
         element = self.Get()
         print(" VerifyIsChecked : ",)
-        if( element.is_selected() == True):
-            printc( "passed" + "\n", "bright green" )
+        if(element.is_selected() == True):
+            printc("passed" + "\n", "bright green")
             return True
         else:
-            printc( "failed" + "\n", "bright red" )
+            printc("failed" + "\n", "bright red")
             return False
 
-    def VerifyIsUncheck( self ):
-        if( self.Verify() == False ):
+    def VerifyIsUncheck(self):
+        if(self.Verify() == False):
             return False
         element = self.Get()
         print(" VerifyIsUncheck : ",)
-        if( element.is_selected() == False):
-            printc( "passed" + "\n", "bright green" )
+        if(element.is_selected() == False):
+            printc("passed" + "\n", "bright green")
             return True
         else:
-            printc( "failed" + "\n", "bright red" )
+            printc("failed" + "\n", "bright red")
             return False
 #Verify Check and Uncheck ----------------------------------------------------------------------------
 
-    def Verify( self ):
+    def Verify(self):
         if self.parent is not None:
-            if( self.parent.Verify() == False ):
+            if(self.parent.Verify() == False):
                 return False
         element = self.Get()
         if element is None:
             return False
         return True
 
-    def VerifyUI( self ):
+    def VerifyUI(self):
         if self.parent is not None:
-            if( self.parent.Verify() == False ):
+            if(self.parent.Verify() == False):
                 return False
         element = self.Get()
 
@@ -201,7 +201,7 @@ class Element( object ):
         overallresult = True
 
         if self.objecttype is not None:
-            if self.VerifyAttribute('type',self.objecttype) == False:
+            if self.VerifyAttribute('type', self.objecttype) == False:
                 overallresult = False
 
         if self.defaultstate is not None:
@@ -221,7 +221,7 @@ class Element( object ):
                     overallresult = False
 
             else :
-                print "Invalid Default State : " +(self.defaultstate)
+                print "Invalid Default State : " + (self.defaultstate)
                 overallresult = False
 
         if self.defaultvalue is not None:
@@ -239,19 +239,19 @@ class Element( object ):
         if self.checkattribute is not None:
             element = self.Get()
             print self.checkattribute
-            #for i in range(len(self.checkattribute)):
+            # for i in range(len(self.checkattribute)):
             for i in self.checkattribute:
                 for j in i.split('|'):
-                    #row = self.checkattribute[j].split("=")
+                    # row = self.checkattribute[j].split("=")
                     row = j.strip().split("=")
-                    if self.VerifyAttribute(row[0],row[1]) == False:
+                    if self.VerifyAttribute(row[0], row[1]) == False:
                         overallresult = False
 
         return(overallresult)
 
-    def VerifyNotexist( self ):
+    def VerifyNotexist(self):
         if self.parent is not None:
-            if( self.parent.Verify() != True ):
+            if(self.parent.Verify() != True):
                 print 'Error parent incorrect'
                 return False
         element = self.Get()
@@ -259,49 +259,54 @@ class Element( object ):
             return True
         return False
 
-    def SendKeys( self, textinput ):
+    def SendKeys(self, textinput):
         textinput = World.ConvertValue(textinput)
         if self.parent is not None:
-            if( self.parent.Verify() == False ):
+            if(self.parent.Verify() == False):
                 return False
         element = self.Get()
-        element.send_keys( textinput )
+        element.send_keys(textinput)
         return True
 
-    def VerifyText(  self, expectedresult ):
+    def VerifyText(self, expectedresult):
         if(self.Verify() != True):
             return False
         element = self.Get()
-        result = str(element.text.encode('utf-8','ignore'))
-        expectedresult = str(World.ConvertValue(expectedresult).encode('utf-8','ignore'))
+        resultText = str(element.text.encode('utf-8', 'ignore'))
+        resultValue = str(element.get_attribute('value').encode('utf-8', 'ignore'))
+        # World.DebugToFile('self.locator=' + self.locator)
+        # World.DebugToFile('resultText=' + resultText)
+        # World.DebugToFile('resultValue=' + resultValue)
+        expectedresult = str(World.ConvertValue(expectedresult).encode('utf-8', 'ignore'))
+        # World.DebugToFile('expectedresult=' + expectedresult)
         if expectedresult == "":
             print " Verify Text : '<blank>' : ",
-            if result == "":
-                printc( "passed\n", "bright green")
+            if resultText == "" and resultValue == "":
+                printc("passed\n", "bright green")
                 return True
             else:
-                printc( "failed\n", "bright red")
+                printc("failed\n", "bright red")
                 print "Got '",
-                printc( str(result) + "'\n", "bright yellow" )
+                printc(str(resultText) + str(resultValue) + "'\n", "bright yellow")
                 return False
         else :
             print " Verify Text : '" + str(expectedresult) + "': ",
-            if result.find(expectedresult) != -1:
-                printc( "passed\n", "bright green")
+            if resultText.find(expectedresult) != -1 or resultValue.find(expectedresult) != -1:
+                printc("passed\n", "bright green")
                 return True
             else:
-                printc( "failed", "bright red")
+                printc("failed", "bright red")
                 print "Got '",
-                printc( str(result) + "'\n", "bright yellow" )
+                printc(str(resultText) + str(resultValue) + "'\n", "bright yellow")
                 return False
 
-    def VerifyValue(  self, value ):
+    def VerifyValue(self, value):
         if(self.Verify() != True):
             return
         element = self.Get()
-        result = str(element.text.encode('utf-8','ignore'))
-        value = str(World.ConvertValue(value).encode('utf-8','ignore'))
-        #print str(element.text)
+        result = str(element.text.encode('utf-8', 'ignore'))
+        value = str(World.ConvertValue(value).encode('utf-8', 'ignore'))
+        # print str(element.text)
         if value == "":
             if result == "":
                 print " Verify Value : <blank> passed"
@@ -317,30 +322,43 @@ class Element( object ):
                 print " Verify Value : " + str(value) + " failed got " + result + " instead"
                 return False
 
-    def VerifyAttribute(  self, attributename, expectedresult ):
+    def VerifyAttribute(self, attributename, expectedresult):
         if(self.Verify() != True):
             return False
         element = self.Get()
-        result = str(element.get_attribute(attributename).encode('utf-8','ignore'))
-        expectedresult = str(expectedresult.encode('utf-8','ignore'))
-        if expectedresult[0] == '"' and expectedresult[len(expectedresult)-1] == '"':
-            expectedresult = expectedresult[1:len(expectedresult)-1]
+        result = str(element.get_attribute(attributename).encode('utf-8', 'ignore'))
+        expectedresult = str(expectedresult.encode('utf-8', 'ignore'))
+        if expectedresult[0] == '"' and expectedresult[len(expectedresult) - 1] == '"':
+            expectedresult = expectedresult[1:len(expectedresult) - 1]
         print " Verify ",
-        printc(str(attributename),'bright yellow')
+        printc(str(attributename), 'bright yellow')
         print ":",
-        printc(str(expectedresult),'bright yellow')
+        printc(str(expectedresult), 'bright yellow')
         if result.find(expectedresult) != -1:
-            printc( "passed\n", 'bright green' )
+            printc("passed\n", 'bright green')
             return True
         else:
-            printc( "failed", 'bright red' )
+            printc("failed", 'bright red')
             print "got",
             printc(result, 'bright red')
             print "instead"
             return False
 
+    def IsBlank(self):
+        if(self.Verify() != True):
+            return False
+        element = self.Get()
+        textValue = str(element.text.encode('utf-8', 'ignore'))
+        currentValue = str(element.get_attribute('value').encode('utf-8', 'ignore'))
+        if textValue != "" or currentValue != "" :
+            return False
+        else:
+            return True
 
-class Page( object ):
+    def HasValue(self):
+        return self.IsBlank() != True
+
+class Page(object):
     name = ""
     title = ""
     url = ""
@@ -348,13 +366,13 @@ class Page( object ):
     loginfunction = ""
     pageverifymethod = "Title"
 
-    def __init__( self,
+    def __init__(self,
                   name="",
                   title="",
-                  url = "",
-                  needlogin = False,
-                  loginfunction = "",
-                  pageverifymethod = "Title",):
+                  url="",
+                  needlogin=False,
+                  loginfunction="",
+                  pageverifymethod="Title",):
             self.name = name
             self.title = title
             self.url = url
@@ -363,52 +381,52 @@ class Page( object ):
             self.pageverifymethod = pageverifymethod
             World.PageList.append(self)
 
-    def Go( self ):
-        #World.GoTo( self.url )
-        World.GoToPage( self )
+    def Go(self):
+        # World.GoTo( self.url )
+        World.GoToPage(self)
         time.sleep(2)
         return self.Verify()
 
-    def Verify( self ):
-        World.CurrentPageVerified=False
+    def Verify(self):
+        World.CurrentPageVerified = False
         if self.pageverifymethod == "Title" or self.pageverifymethod == "Any":
             if self.VerifyPageWithTitle() == True:
-                World.CurrentPageVerified=True
-                World.CurrentPageVerifiedPageName=self.name
+                World.CurrentPageVerified = True
+                World.CurrentPageVerifiedPageName = self.name
                 return True
         if self.pageverifymethod == "URL" or self.pageverifymethod == "Any":
             if self.VerifyPageWithURL() == True:
-                World.CurrentPageVerified=True
-                World.CurrentPageVerifiedPageName=self.name
+                World.CurrentPageVerified = True
+                World.CurrentPageVerifiedPageName = self.name
                 return True
         return False
 
-    def VerifyPageWithTitle( self, title=None ):
+    def VerifyPageWithTitle(self, title=None):
         if title is None:
             title = self.title
-        wait = ui.WebDriverWait(World.driver,10)
+        wait = ui.WebDriverWait(World.driver, 10)
         try:
-            wait.until(lambda driver : World.driver.title.lower().find(title.lower()) !=-1)
+            wait.until(lambda driver : World.driver.title.lower().find(title.lower()) != -1)
         except:
             pass
-        if( World.driver.title.lower().find(title.lower()) !=-1 ):
+        if(World.driver.title.lower().find(title.lower()) != -1):
             return True
         else:
             print "Incorrect Page"
             return False
 
-    def VerifyPageWithURL( self , url=None ):
+    def VerifyPageWithURL(self , url=None):
         if url is None:
             url = self.url
         url1 = urlparse(url)
         targeturl = url1.netloc + url1.path
 
-        wait = ui.WebDriverWait(World.driver,10)
+        wait = ui.WebDriverWait(World.driver, 10)
         try:
-            wait.until(lambda driver : World.driver.current_url.lower().find(targeturl.lower()) !=-1)
+            wait.until(lambda driver : World.driver.current_url.lower().find(targeturl.lower()) != -1)
         except:
             pass
-        if( World.driver.current_url.lower().find(targeturl.lower()) !=-1 ):
+        if(World.driver.current_url.lower().find(targeturl.lower()) != -1):
             return True
         else:
             print "Incorrect Page"
