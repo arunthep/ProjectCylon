@@ -13,6 +13,10 @@
     <script src="js/jquery-ui-1.10.3.custom.js"></script>
     <script type="text/javascript">
         // <![CDATA[
+        String.prototype.replaceAt=function(index, character) {
+            return this.substr(0, index) + character + this.substr(index+character.length);
+        }
+
         jQuery(document).ready(function($) {
             if (!(window.File && window.FileReader && window.FileList && window.Blob)){
                 alert('The File APIs are not fully supported in this browser.');
@@ -150,6 +154,8 @@
         }
 
         function handleFileSelect(evt) {
+            var hasExtraComma = false;
+            var EXPECTED_COMMA_COUNT = 9;
             sessionStorage.clear();
             elementCount = 0;
             var files = evt.target.files; // FileList object
@@ -207,6 +213,16 @@
 
                             if(line.indexOf('Element:,') > -1){
                                 var cols = line.split(',');
+                                if((cols.length - 1) > EXPECTED_COMMA_COUNT){
+                                    hasExtraComma = true;
+                                    line = processCSVLine(line);
+                                    cols = line.split(',');
+                                    for (var llx = 0; llx < cols.length; llx++) {
+                                        if(cols[llx].indexOf('|') != -1){
+                                            cols[llx] = cols[llx].replace("|", ",");
+                                        }                                        
+                                    }
+                                }
                                 var prefix = 'element_'+elementCount;
                                 sessionStorage[prefix+'_ObjectName']=cols[ObjectNameIndex];
                                 sessionStorage[prefix+'_Name']=cols[NameIndex];
@@ -373,6 +389,47 @@
             }
             inputStr = '"' + inputStr + '"';
             return inputStr;
+        }
+
+        function getTargetStringIndexList(inputStr, targetStr){
+            var resultList = [];
+            if(targetStr && inputStr){
+                var targetStrLen = targetStr.length;
+                var startIndex = 0;        
+                while (startIndex < (inputStr.length - 1)){
+                    var baseStr = inputStr.substr(startIndex, targetStrLen);
+                    console.log(baseStr);
+                    var foundIndex = baseStr.indexOf(targetStr);
+                    if(foundIndex != -1){
+                        resultList.push(startIndex + foundIndex);
+                    }
+                    startIndex += targetStrLen;
+                }                
+            }
+            return resultList;
+        }
+        
+        function processCSVLine(strLine){
+            var commaList = getTargetStringIndexList(strLine, ',');
+            var doubleQuoteList = getTargetStringIndexList(strLine, '"');
+            while(commaList.length > 0){
+                var commaIndex = commaList.shift();
+                // Try to find .. ,".... , ....", .. pattern
+                var targetPattern = '"';        
+                if(strLine[commaIndex + targetPattern.length] == targetPattern){
+                    console.log('commaIndex'+commaIndex);
+                    if(commaList.length > 0){
+                        var nextCommaIndex = commaList[0];                
+                        var quoteIndex = doubleQuoteList.indexOf((commaIndex + 1));                
+                        if(quoteIndex < (doubleQuoteList.length - 1)){
+                            if(nextCommaIndex < doubleQuoteList[quoteIndex + 1]){                       
+                                strLine = strLine.replaceAt(nextCommaIndex, '|');                        
+                            }                
+                        }                
+                    }
+                }
+            }
+            return strLine;
         }
 
         // ]]>
