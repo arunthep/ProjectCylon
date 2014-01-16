@@ -26,6 +26,13 @@ def step(context, Name, Value):
     if Element is not None :
         if Element.SendKeysByScript(Value) == False:
             assert False
+
+@when ("User clears input [{Name}]")
+def step(context, Name):
+    Element = World.FindElement(Name)
+    if Element is not None :
+        if Element.SendKeysByScript('') == False:
+            assert False
             
 @when ('User clicks [{Button}] button')
 def step(context, Button):
