@@ -268,6 +268,16 @@ class Element(object):
         element.send_keys(textinput)
         return True
 
+    def SendKeysByScript(self, textinput):
+        textinput = World.ConvertValue(textinput)
+        if self.parent is not None:
+            if(self.parent.Verify() == False):
+                return False
+        element = self.Get()
+        script = "arguments[0].value = '" + textinput + "'"
+        World.driver.execute_script(script, element)
+        return True
+    
     def VerifyText(self, expectedresult):
         if(self.Verify() != True):
             return False
