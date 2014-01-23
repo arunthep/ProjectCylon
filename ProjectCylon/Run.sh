@@ -20,6 +20,7 @@ echo " 10:: GENERATE -> RUN"
 echo " 20:: GENERATE -> CHECK"
 echo " 100:: GENERATE -> CHECK -> RUN"
 echo ""
+echo " kill:: KILL FIREFOX"
 echo " h:: SHOW MENU"
 echo "-------------------------------------------"
 }
@@ -49,6 +50,9 @@ Check(){
     python CheckElements.py 
 }
 
+Kill_Firefox(){
+    ./killfirefox.sh
+}
 
 # Main Command
 Menu
@@ -70,6 +74,8 @@ case "$OPTION" in
     ;;
     [hH] | help | HELP ) Menu
     ;;
+    [kK]ill | k ) Kill_Firefox
+    ;;   
     *) Generate; Run
     ;;
 esac
