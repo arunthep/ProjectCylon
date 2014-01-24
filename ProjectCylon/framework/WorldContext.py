@@ -123,6 +123,12 @@ class WorldContext:
             self.FindElement("password").SendKeys("12345678")
             self.FindElement("login").Click()
             self.dsflogin = True
+         elif loginfunctionname == "PtLogin" and not self.PtLogin:
+            self.FindPage("PtLoginPage").Go()
+            self.FindElement("username").SendKeys("wls.test01@gmail.com")
+            self.FindElement("password").SendKeys("12345678")
+            self.FindElement("login").Click()
+            self.PtLogin = True
         else:
             print "Login Function {name} not found".format(name=loginfunctionname)
             pass
