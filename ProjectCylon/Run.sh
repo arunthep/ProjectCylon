@@ -45,18 +45,28 @@ Run(){
     behave --logging-level INFO --color --no-source --no-skipped    
 }
 
+RunWithTag(){
+    #echo "ENTER RunWithTag FUNCTION"
+
+    behave --logging-level INFO --color --no-source --no-skipped --tags "$TAG"    
+}
+
 # Check Element Function
 Check(){
     python CheckElements.py 
 }
 
 Kill_Firefox(){
-    ./killfirefox.sh
+    ps -ef | grep "firefox" | grep "foreground" | awk '{print $2}' | xargs kill
 }
 
 # Main Command
 Menu
 OPTION="$1"
+TAG="$2"
+#echo "TAG: $TAG"
+
+Kill_Firefox
 
 case "$OPTION" in
 
@@ -74,8 +84,8 @@ case "$OPTION" in
     ;;
     [hH] | help | HELP ) Menu
     ;;
-    [kK]ill | k ) Kill_Firefox
-    ;;   
+    --tags) Generate; RunWithTag
+    ;;     
     *) Generate; Run
     ;;
 esac
