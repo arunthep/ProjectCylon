@@ -38,7 +38,8 @@
                 event.preventDefault();
                 //var BB = Blob();
                 saveAs(new Blob([buildSaveTargetFileContent()], {type: "text/plain;charset=" + '"' + "UTF-8" + '"'}),
-                      sessionStorage['inputFileName'])
+                      sessionStorage['inputFileName']);
+                loadDataToFields(); // Refresh display data again
             }
             , false);
 
@@ -49,6 +50,7 @@
             resetPage();
         });
 
+        var pageNameSuffix = "Page";
         var fileSuffix = "Page.csv";
         var ObjectNameIndex = 1;
         var NameIndex = 2;
@@ -66,7 +68,6 @@
             $('#login-function').remove();
             if($('#need-login').prop('checked')){
                 $('#need-login+br').after('<div class="left-label"><label title="" for="login-function" class="title-text">Login Function:</label></div><input type="text" id="login-function" class="text-input">');
-                //sessionStorage['LoginFunction'] = 'test';
                 if(sessionStorage['LoginFunction'] != ''){
                     $('#login-function').val(sessionStorage['LoginFunction']);
                 }
@@ -120,7 +121,9 @@
         }
 
         function updateStorage(){
-            sessionStorage['Name']=$('#page-name').val();
+            // Automatically append 'Page' to page name
+            var pageName = $('#page-name').val();
+            sessionStorage['Name']=appendSuffix(pageName, pageNameSuffix);
             sessionStorage['Title']=$('#page-title').val();
             sessionStorage['URL']=$('#page-url').val();
             sessionStorage['PageVerifyMethod']=$('#page-verify-method').val();
@@ -349,15 +352,11 @@
         function newPageObjectFile(){
             var inputFileName = prompt('Please enter a new file name');
             if(inputFileName){
-                var inputFileNameSuffix = inputFileName.substr(inputFileName.length - fileSuffix.length);
-                if(fileSuffix.toLowerCase()    == inputFileNameSuffix.toLowerCase()){
-                    inputFileName = inputFileName.substr(0, inputFileName.length - fileSuffix.length) + fileSuffix;
-                }else{
-                    inputFileName = inputFileName + fileSuffix;
-                }
+                inputFileName = appendSuffix(inputFileName, fileSuffix);
                 sessionStorage['inputFileName'] = inputFileName;
                 document.getElementById('lbl-file-name').innerHTML = '[New file name = ' + inputFileName + ']';
                 $('#select-a-file').val('');
+                resetPage();
             }
         }
 
@@ -432,13 +431,23 @@
             return strLine;
         }
 
+        function appendSuffix(strInput, strSuffix){
+            var currentInputSuffix = strInput.substr(strInput.length - strSuffix.length);
+            if(strSuffix.toLowerCase() == currentInputSuffix.toLowerCase()){
+                strInput = strInput.substr(0, strInput.length - strSuffix.length) + strSuffix;
+            }else{
+                strInput = strInput + strSuffix;
+            }
+            return strInput;
+        }
+
         // ]]>
       </script>
 </head>
 <body>
     <header>
         <h1>Page Object Definition</h1>
-        <label class="version">rev. 4</label><br />
+        <label class="version">rev. 5</label><br />
     </header>
     <section class="page-list-section">
         <div id="error-placeholder"></div>
