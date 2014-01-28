@@ -18,6 +18,7 @@ if platform.system() == 'Windows':
 else:
     pass
 
+
 codeCodes = {
     'black':    '0;30', 'bright gray':  '0;37',
     'blue':     '0;34', 'white':        '1;37',
@@ -47,6 +48,7 @@ def writec(text, color):
 def switchColor(color):
     """Switch console color."""
     sys.stdout.write("\033[" + codeCodes[color] + "m")
+
 
 class Element(object):
     name = ""
@@ -277,7 +279,7 @@ class Element(object):
         script = "arguments[0].value = '" + textinput + "'"
         World.driver.execute_script(script, element)
         return True
-    
+
     def VerifyText(self, expectedresult):
         if(self.Verify() != True):
             return False
@@ -391,7 +393,7 @@ class Page(object):
                   needlogin=False,
                   loginfunction="",
                   pageverifymethod="Title",):
-            self.name = name
+            self.name = World.appendSuffix(name, World.PAGE_SUFFIX)
             self.title = title
             self.url = url
             self.needlogin = needlogin
@@ -407,12 +409,12 @@ class Page(object):
 
     def Verify(self):
         World.CurrentPageVerified = False
-        if self.pageverifymethod == "Title" or self.pageverifymethod == "Any":
+        if self.pageverifymethod.lower() == "title" or self.pageverifymethod.lower() == "any":
             if self.VerifyPageWithTitle() == True:
                 World.CurrentPageVerified = True
                 World.CurrentPageVerifiedPageName = self.name
                 return True
-        if self.pageverifymethod == "URL" or self.pageverifymethod == "Any":
+        if self.pageverifymethod.lower() == "url" or self.pageverifymethod.lower() == "any":
             if self.VerifyPageWithURL() == True:
                 World.CurrentPageVerified = True
                 World.CurrentPageVerifiedPageName = self.name

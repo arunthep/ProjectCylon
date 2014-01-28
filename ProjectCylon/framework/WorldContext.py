@@ -12,7 +12,6 @@ from selenium.webdriver.support.ui     import WebDriverWait
 from selenium.webdriver.support        import expected_conditions as EC
 import selenium.webdriver.support.ui                              as ui
 
-
 class Singleton:
     """
     A non-thread-safe helper class to ease implementing singletons.
@@ -54,6 +53,7 @@ class Singleton:
 
 @Singleton
 class WorldContext:
+    PAGE_SUFFIX = 'Page'
     driver = None
     MasterList = {}
     ElementList = []
@@ -70,8 +70,8 @@ class WorldContext:
         self.driver.implicitly_wait(15)
         pass
     def DebugToFile(self, message=None, logFileName='cylon_debug.log'):
-        openFlag='w'
-        if message is not None and message.strip() != '' and logFileName is not None and logFileName.strip() !='':
+        openFlag = 'w'
+        if message is not None and message.strip() != '' and logFileName is not None and logFileName.strip() != '':
             if os.path.isfile(logFileName): openFlag = 'a'
             with open(logFileName, openFlag) as fhandle:
                 fhandle.write(datetime.datetime.now().strftime('%m/%d/%Y %I:%M:%S.%f %p ') + ' ' + message + '\n')
@@ -86,14 +86,14 @@ class WorldContext:
         time.sleep(1)
     def FindPage(self, PageName):
         for Page in self.PageList:
-            if Page.name.lower() == PageName.lower():
+            if Page.name.lower() == self.appendSuffix(PageName, self.PAGE_SUFFIX).lower():
                 return Page
         print "Page not found in PageList"
         assert False
     def FindElement(self, Name):
         for Element in self.ElementList:
             if Element.name.lower() == Name.lower():
-                #Skip element that exists in other page
+                # Skip element that exists in other page
                 if self.CurrentPageVerified and Element.parent.name != self.CurrentPageVerifiedPageName: continue
                 if self.CurrentPageVerified == True or Element.parent.Verify() == True:
                     return Element
@@ -137,14 +137,22 @@ class WorldContext:
         try:
             itemlist = self.MasterList[ItemListID]
         except KeyError:
-            print "List", ItemListID,"Not Found"
+            print "List", ItemListID, "Not Found"
             assert False
         try:
             item = itemlist[ItemID]
         except KeyError:
-            print "Item", ItemID,"Not Found in list", ItemListID
+            print "Item", ItemID, "Not Found in list", ItemListID
             assert False
         return item
+
+    def appendSuffix(self, strInput, strSuffix):
+        currentSuffix = strInput[-len(strSuffix):len(strInput)]
+        if currentSuffix.lower() == strSuffix.lower():
+            strInput = strInput[0: len(strInput) - len(strSuffix)] + strSuffix
+        else:
+            strInput = strInput + strSuffix
+        return strInput
 
     CurrentUser = None
 
