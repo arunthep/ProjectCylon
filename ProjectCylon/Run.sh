@@ -20,6 +20,7 @@ echo " 10:: GENERATE -> RUN"
 echo " 20:: GENERATE -> CHECK"
 echo " 100:: GENERATE -> CHECK -> RUN"
 echo ""
+echo " kill:: KILL FIREFOX"
 echo " h:: SHOW MENU"
 echo "-------------------------------------------"
 }
@@ -44,15 +45,28 @@ Run(){
     behave --logging-level INFO --color --no-source --no-skipped    
 }
 
+RunWithTag(){
+    #echo "ENTER RunWithTag FUNCTION"
+
+    behave --logging-level INFO --color --no-source --no-skipped --tags "$TAG"    
+}
+
 # Check Element Function
 Check(){
     python CheckElements.py 
 }
 
+Kill_Firefox(){
+    ps -ef | grep "firefox" | grep "foreground" | awk '{print $2}' | xargs kill
+}
 
 # Main Command
 Menu
 OPTION="$1"
+TAG="$2"
+#echo "TAG: $TAG"
+
+Kill_Firefox
 
 case "$OPTION" in
 
@@ -70,6 +84,8 @@ case "$OPTION" in
     ;;
     [hH] | help | HELP ) Menu
     ;;
+    --tags) Generate; RunWithTag
+    ;;     
     *) Generate; Run
     ;;
 esac

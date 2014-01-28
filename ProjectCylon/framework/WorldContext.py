@@ -60,6 +60,7 @@ class WorldContext:
     PageList = []
     cdmlogin = False
     dsflogin = False
+    ptlogin = False
     CurrentPage = None
     CurrentPageVerified = False
     CurrentPageVerifiedPageName = None
@@ -119,10 +120,16 @@ class WorldContext:
             self.cdmlogin = True
         elif loginfunctionname == "DsfLogin" and not self.dsflogin:
             self.FindPage("DsfLoginPage").Go()
-            self.FindElement("username").SendKeys("fruit@gmail.com")
+            self.FindElement("username").SendKeys("wls.test01@gmail.com")
             self.FindElement("password").SendKeys("12345678")
             self.FindElement("login").Click()
             self.dsflogin = True
+        elif loginfunctionname == "PtLogin" and not self.ptlogin:
+            self.FindPage("PtLoginPage").Go()
+            self.FindElement("username").SendKeys("wls.test01@gmail.com")
+            self.FindElement("password").SendKeys("12345678")
+            self.FindElement("login").Click()
+            self.ptlogin = True
         else:
             print "Login Function {name} not found".format(name=loginfunctionname)
             pass
