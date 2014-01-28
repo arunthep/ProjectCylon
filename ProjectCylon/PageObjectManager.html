@@ -112,7 +112,7 @@
                     sessionStorage[prefix+'_Locator']=addDoubleQuoteChar($(this).find('td:eq('+ LocatorIndex + ')').html().trim().replace(/&nbsp;/g, '').replace(/<br>/g, ''));
 
                     var htmlContent = $(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_CheckAttribute']=addDoubleQuoteChar(htmlContent);
+                    sessionStorage[prefix+'_CheckAttribute']=addDoubleQuoteChar(htmlContent).replace(/<br>/g, '').trim();
 
                     indexRun++;
                 });
@@ -220,7 +220,7 @@
                                     for (var llx = 0; llx < cols.length; llx++) {
                                         if(cols[llx].indexOf('|') != -1){
                                             cols[llx] = cols[llx].replace("|", ",");
-                                        }                                        
+                                        }
                                     }
                                 }
                                 var prefix = 'element_'+elementCount;
@@ -296,7 +296,7 @@
             $('#page-title').val(sessionStorage['Title']);
             $('#page-url').val(sessionStorage['URL']);
             $('#page-verify-method').val(sessionStorage['PageVerifyMethod']);
-            $('#need-login').prop('checked', sessionStorage['NeedLogin'] == 'TRUE' ? true:false);   
+            $('#need-login').prop('checked', sessionStorage['NeedLogin'] == 'TRUE' ? true:false);
             updatePageFromNeedLoginChange();
             var eleCount = parseInt(sessionStorage['elementCount']);
             for (var ll = 0; ll < eleCount ; ll++) {
@@ -366,7 +366,7 @@
             $('#page-name').val('');
             $('#page-title').val('');
             $('#page-url').val('');
-            $('#page-verify-method').val('');
+            $('#page-verify-method').val('URL'); // Default value
             $('#need-login').prop('checked', false);
             sessionStorage['inputFileName'] = '';
             sessionStorage['elementCount'] = 0;
@@ -395,7 +395,7 @@
             var resultList = [];
             if(targetStr && inputStr){
                 var targetStrLen = targetStr.length;
-                var startIndex = 0;        
+                var startIndex = 0;
                 while (startIndex < (inputStr.length - 1)){
                     var baseStr = inputStr.substr(startIndex, targetStrLen);
                     console.log(baseStr);
@@ -404,28 +404,28 @@
                         resultList.push(startIndex + foundIndex);
                     }
                     startIndex += targetStrLen;
-                }                
+                }
             }
             return resultList;
         }
-        
+
         function processCSVLine(strLine){
             var commaList = getTargetStringIndexList(strLine, ',');
             var doubleQuoteList = getTargetStringIndexList(strLine, '"');
             while(commaList.length > 0){
                 var commaIndex = commaList.shift();
                 // Try to find .. ,".... , ....", .. pattern
-                var targetPattern = '"';        
+                var targetPattern = '"';
                 if(strLine[commaIndex + targetPattern.length] == targetPattern){
                     console.log('commaIndex'+commaIndex);
                     if(commaList.length > 0){
-                        var nextCommaIndex = commaList[0];                
-                        var quoteIndex = doubleQuoteList.indexOf((commaIndex + 1));                
+                        var nextCommaIndex = commaList[0];
+                        var quoteIndex = doubleQuoteList.indexOf((commaIndex + 1));
                         if(quoteIndex < (doubleQuoteList.length - 1)){
-                            if(nextCommaIndex < doubleQuoteList[quoteIndex + 1]){                       
-                                strLine = strLine.replaceAt(nextCommaIndex, '|');                        
-                            }                
-                        }                
+                            if(nextCommaIndex < doubleQuoteList[quoteIndex + 1]){
+                                strLine = strLine.replaceAt(nextCommaIndex, '|');
+                            }
+                        }
                     }
                 }
             }
@@ -438,7 +438,7 @@
 <body>
     <header>
         <h1>Page Object Definition</h1>
-        <label class="version">rev. 3</label><br />
+        <label class="version">rev. 4</label><br />
     </header>
     <section class="page-list-section">
         <div id="error-placeholder"></div>
@@ -468,7 +468,11 @@
         <div class="left-label">
             <label title="" for="page-verify-method" class="title-text">Page Verify Method:</label>
         </div>
-        <input type="text" id="page-verify-method" class="text-input"></input><br />
+        <select id="page-verify-method">
+          <option value="URL">URL</option>
+          <option value="Title">Title</option>
+          <option value="Any">Any</option>
+        </select><br />
         <div class="left-label">
             <label title="" for="need-login" class="title-text">Need Login:</label>
         </div>
