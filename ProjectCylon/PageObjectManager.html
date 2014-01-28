@@ -109,7 +109,7 @@
                 var indexRun = 0;
                 $('#element-table tbody tr').each(function(){
                     var prefix = 'element_'+indexRun;
-                    sessionStorage[prefix+'_Locator']=addDoubleQuoteChar($(this).find('td:eq('+ LocatorIndex + ')').html().trim().replace('&nbsp;', ''));
+                    sessionStorage[prefix+'_Locator']=addDoubleQuoteChar($(this).find('td:eq('+ LocatorIndex + ')').html().trim().replace(/&nbsp;/g, '').replace(/<br>/g, ''));
 
                     var htmlContent = $(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace(/&nbsp;/g, '').trim();
                     sessionStorage[prefix+'_CheckAttribute']=addDoubleQuoteChar(htmlContent);
@@ -133,17 +133,17 @@
                 var indexRun = 0;
                 $('#element-table tbody tr').each(function(){
                     var prefix = 'element_'+indexRun;
-                    sessionStorage[prefix+'_ObjectName']=$(this).find('td:eq('+ ObjectNameIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_Name']=$(this).find('td:eq('+ NameIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_LocatingMethod']=$(this).find('td:eq('+ LocatingMethodIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_Locator']=$(this).find('td:eq('+ LocatorIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_PreCheck']=$(this).find('td:eq('+ PreCheckIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_ObjectType']=$(this).find('td:eq('+ ObjectTypeIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_DefaultState']=$(this).find('td:eq('+ DefaultStateIndex + ')').html().replace(/&nbsp;/g, '').trim();
-                    sessionStorage[prefix+'_DefaultValue']=$(this).find('td:eq('+ DefaultValueIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    sessionStorage[prefix+'_ObjectName']=$(this).find('td:eq('+ ObjectNameIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_Name']=$(this).find('td:eq('+ NameIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_LocatingMethod']=$(this).find('td:eq('+ LocatingMethodIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_Locator']=$(this).find('td:eq('+ LocatorIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_PreCheck']=$(this).find('td:eq('+ PreCheckIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_ObjectType']=$(this).find('td:eq('+ ObjectTypeIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_DefaultState']=$(this).find('td:eq('+ DefaultStateIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_DefaultValue']=$(this).find('td:eq('+ DefaultValueIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
 
                     sessionStorage[prefix+'_CheckAttribute']='';
-                    var htmlContent = $(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace(/&nbsp;/g, '').trim();
+                    var htmlContent = $(this).find('td:eq('+ CheckAttributeIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
                     if(htmlContent.length > 0){
                         sessionStorage[prefix+'_CheckAttribute']=htmlContent;
                     }
