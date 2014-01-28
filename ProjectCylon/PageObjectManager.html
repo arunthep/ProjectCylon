@@ -138,7 +138,7 @@
                     var prefix = 'element_'+indexRun;
                     sessionStorage[prefix+'_ObjectName']=$(this).find('td:eq('+ ObjectNameIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
                     sessionStorage[prefix+'_Name']=$(this).find('td:eq('+ NameIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
-                    sessionStorage[prefix+'_LocatingMethod']=$(this).find('td:eq('+ LocatingMethodIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
+                    sessionStorage[prefix+'_LocatingMethod']=$(this).find('td:eq('+ LocatingMethodIndex + ') select').val().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
                     sessionStorage[prefix+'_Locator']=$(this).find('td:eq('+ LocatorIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
                     sessionStorage[prefix+'_PreCheck']=$(this).find('td:eq('+ PreCheckIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
                     sessionStorage[prefix+'_ObjectType']=$(this).find('td:eq('+ ObjectTypeIndex + ')').html().replace(/&nbsp;/g, '').replace(/<br>/g, '').trim();
@@ -304,16 +304,21 @@
             var eleCount = parseInt(sessionStorage['elementCount']);
             for (var ll = 0; ll < eleCount ; ll++) {
                 var lastRow=$('#element-table tbody tr:last');
+                var newRow;
                 if(lastRow.length == 0){
                     lastRow=$('#element-table tbody');
-                    var newRow = $("<tr>");
+                    newRow = $("<tr>");
                     newRow.append(buildColumnHTML(ll));
                     lastRow.append(newRow);
                 }else{
-                    var newRow = $("<tr>");
+                    newRow = $("<tr>");
                     newRow.append(buildColumnHTML(ll));
                     newRow.insertAfter(lastRow);
                 }
+                var prefix = 'element_'+ll;
+                var locatingMethodValue = sessionStorage[prefix+'_LocatingMethod'];
+                alert(prefix + locatingMethodValue);
+                newRow.find('select').val(locatingMethodValue);
             }
         }
 
@@ -323,7 +328,7 @@
             cols += '<td>' + (elementIndex+1) + '</td>';
             cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
             cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
-            cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
+            cols += '<td><select style="width:140px;"><option value="xpath">xpath</option><option value="name">name</option></select></td>'; //_LocatingMethod
             cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
             cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
             cols += '<td contenteditable="true">' + '&nbsp' + '</td>';
@@ -339,7 +344,7 @@
             cols += '<td>' + (elementIndex+1) + '</td>';
             cols += '<td contenteditable="true">' + sessionStorage[prefix+'_ObjectName'] + '</td>';
             cols += '<td contenteditable="true">' + sessionStorage[prefix+'_Name'] + '</td>';
-            cols += '<td contenteditable="true">' + sessionStorage[prefix+'_LocatingMethod'] + '</td>';
+            cols += '<td><select style="width:140px;"><option value="xpath">xpath</option><option value="name">name</option></select></td>'; //_LocatingMethod
             cols += '<td contenteditable="true">' + sessionStorage[prefix+'_Locator'] + '</td>';
             cols += '<td contenteditable="true">' + sessionStorage[prefix+'_PreCheck'] + '&nbsp' + '</td>';
             cols += '<td contenteditable="true">' + sessionStorage[prefix+'_ObjectType'] + '&nbsp' + '</td>';
@@ -447,7 +452,7 @@
 <body>
     <header>
         <h1>Page Object Definition</h1>
-        <label class="version">rev. 5</label><br />
+        <label class="version">rev. 6</label><br />
     </header>
     <section class="page-list-section">
         <div id="error-placeholder"></div>
