@@ -32,9 +32,20 @@ ClearPY(){
 
 # Generate Object Function
 Generate(){
+
     ClearPY
     cd pageobjectdefinition
     ./GenAllPageObject.sh
+    cd ../
+    echo "GENERATE OBJECT(S): END"
+}
+
+# Generate Object Function
+GenerateSingleObject(){
+    echo "filename: $2"
+    ClearPY
+    cd pageobjectdefinition
+    ./GenSinglePageObject.sh "$Input2"
     cd ../
     echo "GENERATE OBJECT(S): END"
 }
@@ -48,7 +59,7 @@ Run(){
 RunWithTag(){
     #echo "ENTER RunWithTag FUNCTION"
 
-    behave --logging-level INFO --color --no-source --no-skipped --tags "$TAG"    
+    behave --logging-level INFO --color --no-source --no-skipped --tags "$Input2"    
 }
 
 # Check Element Function
@@ -63,8 +74,8 @@ Kill_Firefox(){
 # Main Command
 Menu
 OPTION="$1"
-TAG="$2"
-#echo "TAG: $TAG"
+Input2="$2"
+echo "TAG: $TAG"
 
 Kill_Firefox
 
@@ -85,7 +96,9 @@ case "$OPTION" in
     [hH] | help | HELP ) Menu
     ;;
     --tags) Generate; RunWithTag
-    ;;     
+    ;;
+    --gensingle) GenerateSingleObject
+    ;;         
     *) Generate; Run
     ;;
 esac
