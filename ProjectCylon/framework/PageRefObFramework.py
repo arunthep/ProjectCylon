@@ -307,7 +307,7 @@ class Element(object):
                 return False
         else :
             print " Verify Text : '" + str(expectedresult) + "': ",
-            if resultText.find(expectedresult) != -1 or resultValue.find(expectedresult) != -1:
+            if (resultText.find(expectedresult) != -1 or resultValue.find(expectedresult) != -1) and (resultText == expectedresult or resultValue == expectedresult):
                 printc("passed\n", "bright green")
                 return True
             else:
